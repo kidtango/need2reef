@@ -1,11 +1,29 @@
 {
-  "name": "frontend",
+  "name": "tweef.io",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "apollo-boost": "^0.1.16",
+    "apollo-client": "^2.4.2",
+    "apollo-link": "^1.2.6",
+    "apollo-link-context": "^1.0.12",
+    "date-fns": "^2.0.0-alpha.7",
+    "downshift": "^2.2.3",
+    "gestalt": "^0.85.0",
+    "graphql": "^14.0.2",
+    "graphql-tag": "^2.9.2",
+    "lodash.debounce": "^4.0.8",
+    "prop-types": "^15.6.2",
     "react": "^16.7.0",
+    "react-adopt": "^0.6.0",
+    "react-apollo": "^2.2.1",
     "react-dom": "^16.7.0",
-    "react-scripts": "2.1.2"
+    "react-responsive-carousel": "^3.1.43",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.2",
+    "react-spinners": "^0.4.7",
+    "react-transition-group": "^2.5.1",
+    "react-virtualized": "^9.21.0"
   },
   "scripts": {
     "start": "react-scripts start",

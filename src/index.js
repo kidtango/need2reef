@@ -1,12 +1,62 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import 'gestalt/dist/gestalt.css';
+import { Provider } from './context';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import App from './components/App';
+import Profile from './components/profile/Profile';
+import Navbar from './components/navbar/Navbar';
+import { endpoint } from './config';
+import { getToken } from './utils';
+import withSession from './components/withSession';
+
+// using Apollo client to send auth header to backend
+const client = new ApolloClient({
+  uri: process.env.NODE_ENV === 'development' ? endpoint : endpoint,
+  fetchOptions: {
+    credentials: 'include'
+  },
+
+  request: operation => {
+    const token = getToken();
+    operation.setContext({
+      headers: {
+        authorization: token
+      }
+    });
+  },
+  onError: ({ networkError }) => {
+    if (networkError) {
+      console.log('Network Error', networkError);
+    }
+  }
+});
+
+const Root = ({ refetch, session }) => (
+  <Router>
+    <Provider>
+      <Navbar session={session} />
+      <Switch>
+        <Route component={App} exact path='/' />
+        <Route render={() => <Profile session={session} />} path='/profile' />
+      </Switch>
+    </Provider>
+  </Router>
+);
+
+const RootWithSession = withSession(Root);
+
+ReactDOM.render(
+  <ApolloProvider client={client}>
+    <RootWithSession />
+  </ApolloProvider>,
+  document.getElementById('root')
+);
+
+if (module.hot) {
+  module.hot.accept();
+}
