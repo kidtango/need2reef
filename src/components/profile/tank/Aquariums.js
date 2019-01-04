@@ -1,6 +1,4 @@
 import React from 'react';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import ConfirmationToast from '../../toastMessage/confirmationToast';
 
 import {
   Box,
@@ -14,7 +12,6 @@ import {
 } from 'gestalt';
 import TankMenu from './TankMenu';
 import RemoveTank from './RemoveTank';
-import confirmationToast from '../../toastMessage/confirmationToast';
 
 const Aquariums = ({ profile }) => {
   const tanks = profile.tanks;

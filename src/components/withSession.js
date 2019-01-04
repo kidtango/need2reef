@@ -1,7 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import { GET_CURRENT_USER, GET_CURRENT_USER_PROFILE } from './queries/index';
-import Spinner from './Spinner';
+import Spinner from './spinner/Spinner';
 import { Box, Container } from 'gestalt';
 
 const withSession = Component => props => (

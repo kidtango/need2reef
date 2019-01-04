@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { CREATE_TANK_MUTATION } from '../../queries/index';
 import { GET_CURRENT_USER_PROFILE } from '../../queries/index';
 import {

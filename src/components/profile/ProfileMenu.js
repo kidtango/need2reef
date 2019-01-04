@@ -4,7 +4,7 @@ import Discussions from './Discussions';
 import Aquariums from './tank/Aquariums';
 import { Query } from 'react-apollo';
 import { GET_CURRENT_USER_PROFILE } from '../queries/index';
-import Spinner from '../Spinner';
+import Spinner from '../spinner/Spinner';
 
 class ProfileMenu extends Component {
   state = {

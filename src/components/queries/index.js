@@ -24,21 +24,6 @@ export const GET_CURRENT_USER_PROFILE = gql`
         title
         posts {
           id
-          author {
-            id
-            name
-          }
-          createdAt
-          body
-          replies {
-            id
-            createdAt
-            author {
-              id
-              name
-            }
-            body
-          }
         }
         images {
           id
@@ -69,7 +54,43 @@ export const DELETE_TANK_MUTATION = gql`
 `;
 
 // Add new comments to tank profile
-// export const CREATE_TANK_COMMENT_MUTATION = gql`
-// mutation CREATE_TANK_COMMENT_MUTATION($)
+export const CREATE_TANK_COMMENT_MUTATION = gql`
+  mutation CREATE_TANK_COMMENT_MUTATION($body: String!, $tankId: ID!) {
+    createTankPost(data: { body: $body, tankId: $tankId }) {
+      id
+    }
+  }
+`;
 
-// `;
+// Get comments for tank
+export const GET_COMMENTS_QUERY = gql`
+  query GET_COMMENTS_QUERY($id: ID!) {
+    tankPosts(orderBy: createdAt_DESC, where: { tank: { id: $id } }) {
+      id
+      body
+      createdAt
+      replies {
+        id
+        body
+        createdAt
+        author {
+          id
+          name
+        }
+      }
+      author {
+        id
+        name
+      }
+    }
+  }
+`;
+
+// Create replies for comments
+export const CREATE_TANK_REPLY_MUTATION = gql`
+  mutation CREATE_TANK_REPLY_MUTATION($body: String!, $postId: ID!) {
+    createTankReply(data: { body: $body, postId: $postId }) {
+      id
+    }
+  }
+`;

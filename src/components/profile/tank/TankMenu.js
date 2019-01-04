@@ -19,7 +19,6 @@ class TankMenu extends React.Component {
     return (
       <Box marginTop={2}>
         <Tabs
-        
           tabs={[
             {
               text: 'Equipment'
@@ -39,7 +38,7 @@ class TankMenu extends React.Component {
           onChange={this.handleChange}
         />
         <Box padding={2}>
-          {this.state.activeIndex === 1 && <Comments comments={tank.posts} />}
+          {this.state.activeIndex === 1 && <Comments tankId={tank.id} />}
         </Box>
       </Box>
     );
