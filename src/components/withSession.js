@@ -1,13 +1,12 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { GET_CURRENT_USER, GET_CURRENT_USER_PROFILE } from './queries/index';
+import { GET_CURRENT_USER } from './graphql/queries';
 import Spinner from './spinner/Spinner';
 import { Box, Container } from 'gestalt';
 
 const withSession = Component => props => (
   <Query query={GET_CURRENT_USER}>
     {({ data, loading, refetch }) => {
-      console.log(data);
       if (loading)
         return (
           <Container>

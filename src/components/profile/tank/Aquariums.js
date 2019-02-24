@@ -1,17 +1,9 @@
 import React from 'react';
 
-import {
-  Box,
-  Mask,
-  Heading,
-  Collage,
-  Image,
-  IconButton,
-  Card,
-  Container
-} from 'gestalt';
+import { Box, Mask, Heading, Collage, Image, Card } from 'gestalt';
 import TankMenu from './TankMenu';
 import RemoveTank from './RemoveTank';
+import AddImages from './AddImages';
 
 const Aquariums = ({ profile }) => {
   const tanks = profile.tanks;
@@ -19,7 +11,7 @@ const Aquariums = ({ profile }) => {
 
   return tanks.map(tank => {
     return (
-      <Box justifyContent='center' display='block'>
+      <Box justifyContent='center' display='block' key={tank.id}>
         <Box
           display='flex'
           alignItems='center'
@@ -47,8 +39,13 @@ const Aquariums = ({ profile }) => {
                 justifyContent='end'
                 marginLeft={10}
                 flex='shrink'
+                dangerouslySetInlineStyle={{
+                  __style: {
+                    zIndex: 1
+                  }
+                }}
               >
-                <IconButton icon='camera-roll' size='md' iconColor='blue' />
+                <AddImages profileId={profileId} tankId={tank.id} />
               </Box>
               <Box direction='row' justifyContent='end' flex='shrink'>
                 <RemoveTank profileId={profileId} tankId={tank.id} />
@@ -66,20 +63,21 @@ const Aquariums = ({ profile }) => {
                     color: '#000',
                     naturalHeight: 806,
                     naturalWidth: 564,
-                    src: `${tank.images[0] && tank.images[0].image}`
+                    src: `${tank.images[0] && tank.images[0].url}`
                   };
                   const nonCoverImages = [
                     {
                       color: 'rgb(111, 91, 77)',
                       naturalHeight: 751,
                       naturalWidth: 564,
-                      src: `${tank.images[1] && tank.images[1].image}`
+                      src: `${tank.images[1] && tank.images[1].url}`
                     },
                     {
                       color: 'rgb(231, 186, 176)',
                       naturalHeight: 200,
                       naturalWidth: 98,
-                      src: `${tank.images[2] && tank.images[2].image}`
+                      src: `${tank.images[tank.images.length - 1] &&
+                        tank.images[tank.images.length - 1].url}`
                     }
                   ];
                   const image =
@@ -102,7 +100,6 @@ const Aquariums = ({ profile }) => {
                     </Mask>
                   );
                 }}
-                width={550}
               />
             </Card>
           </Box>

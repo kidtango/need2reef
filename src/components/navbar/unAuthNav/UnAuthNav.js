@@ -6,8 +6,7 @@ import {
   Heading,
   Image,
   IconButton,
-  Sticky,
-  Avatar
+  Sticky
 } from 'gestalt';
 import { NavLink } from 'react-router-dom';
 import UnAuthNavMenu from './UnAuthNavMenu';
@@ -36,7 +35,7 @@ const UnAuthNav = ({ session }) => (
             />
           </Box>{' '}
           <Heading size='xs' color='blue'>
-            Need2REEF
+            Tweef.io
           </Heading>
         </Box>{' '}
       </NavLink>
@@ -64,11 +63,7 @@ const UnAuthNav = ({ session }) => (
           <IconButton accessibilityLabel='people' icon='people' size='md' />
         </Box>
         <Box paddingX={2}>
-          <Avatar
-            name={session ? session.me.name : 'guest'}
-            size='sm'
-            src='/assets/scott.jpg'
-          />
+          <IconButton icon='person' />
         </Box>
         <Box paddingX={2}>
           <IconButton accessibilityLabel='bell' icon='bell' size='md' />

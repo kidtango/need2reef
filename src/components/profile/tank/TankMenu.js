@@ -17,28 +17,36 @@ class TankMenu extends React.Component {
     const { tank } = this.props;
     if (!tank) return <p>Error</p>;
     return (
-      <Box marginTop={2}>
-        <Tabs
-          tabs={[
-            {
-              text: 'Equipment'
-            },
-            {
-              text: `${
-                tank.posts.length > 1
-                  ? `${tank.posts.length} comments`
-                  : `${tank.posts.length} comment`
-              }`
-            },
-            {
-              text: 'Water Parameters'
-            }
-          ]}
-          activeTabIndex={this.state.activeIndex}
-          onChange={this.handleChange}
-        />
+      <Box
+        display='block'
+        wrap
+        alignContent='center'
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Box marginTop={2}>
+          <Tabs
+            tabs={[
+              {
+                text: `${
+                  tank.posts.length > 1
+                    ? `${tank.posts.length} comments`
+                    : `${tank.posts.length} comment`
+                }`
+              },
+              {
+                text: 'Equipment'
+              },
+              {
+                text: 'Water Parameters'
+              }
+            ]}
+            activeTabIndex={this.state.activeIndex}
+            onChange={this.handleChange}
+          />
+        </Box>
         <Box padding={2}>
-          {this.state.activeIndex === 1 && <Comments tankId={tank.id} />}
+          {this.state.activeIndex === 0 && <Comments tankId={tank.id} />}
         </Box>
       </Box>
     );

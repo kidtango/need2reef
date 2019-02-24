@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import { CREATE_TANK_MUTATION } from '../../graphql/mutations';
+import SmallerSpinner from '../../spinner/SmallerSpinner';
+import { CREATE_TANK_IMAGE_MUTATION } from '../../graphql/mutations';
 import { GET_CURRENT_USER_PROFILE } from '../../graphql/queries';
+
 import {
   Box,
   IconButton,
@@ -16,10 +18,10 @@ import {
   Toast
 } from 'gestalt';
 
-class AddNewTank extends Component {
+class AddImages extends Component {
   state = {
     open: false,
-    title: '',
+    files: [],
     showGuideToast: false
   };
 
@@ -30,39 +32,40 @@ class AddNewTank extends Component {
     this.setState(() => ({ open: false }));
   };
   handleChange = ({ event }) => {
+    // console.log(e.target.files[0]);
+    let files = [];
+    files.push(event.target.files[0]);
     this.setState({
-      [event.target.name]: event.target.value
+      files
     });
   };
 
-  createTankOnKeyPress = async ({ event }, createTankMutation) => {
-    if (event.key === 'Enter') {
-      await createTankMutation({
-        variables: {
-          title: this.state.title,
-          profileId: this.props.profileId
-        }
-      });
+  addImage = async (e, createTankImageMutation) => {
+    const { files } = this.state;
 
-      this.setState({ open: false, showGuideToast: true, title: '' });
-      setTimeout(() => {
-        this.setState({ showGuideToast: false });
-      }, 4000);
-    }
-  };
+    const data = new FormData();
+    data.append('file', files[0]);
+    data.append('upload_preset', 'tweef1');
 
-  createTankOnClick = async (e, createTankMutation) => {
-    await createTankMutation({
+    const res = await fetch(
+      'https://api.cloudinary.com/v1_1/scotttang/image/upload',
+      {
+        method: 'POST',
+        body: data
+      }
+    );
+    const image = await res.json();
+
+    // Store image to database
+
+    await createTankImageMutation({
       variables: {
-        title: this.state.title,
-        profileId: this.props.profileId
+        tankId: this.props.tankId,
+        url: image.secure_url
       }
     });
 
-    this.setState({ open: false, showGuideToast: true, title: '' });
-    setTimeout(() => {
-      this.setState({ showGuideToast: false });
-    }, 4000);
+    this.setState({ files: [] });
   };
 
   render() {
@@ -70,7 +73,7 @@ class AddNewTank extends Component {
 
     return (
       <Mutation
-        mutation={CREATE_TANK_MUTATION}
+        mutation={CREATE_TANK_IMAGE_MUTATION}
         refetchQueries={[
           {
             query: GET_CURRENT_USER_PROFILE,
@@ -78,7 +81,13 @@ class AddNewTank extends Component {
           }
         ]}
       >
-        {(createTank, { loading, error }) => {
+        {(createTankImage, { loading, error }) => {
+          if (loading)
+            return (
+              <Box alignContent='center'>
+                <SmallerSpinner />
+              </Box>
+            );
           return (
             <React.Fragment>
               <Box alignContent='center'>
@@ -90,53 +99,46 @@ class AddNewTank extends Component {
                 >
                   <IconButton
                     accessibilityExpanded={!!this.state.open}
-                    accessibilityLabel='add'
+                    accessibilityLabel='add image'
                     accessibilityHaspopup
                     onClick={this.handleClick}
-                    icon='add'
-                    size='lg'
+                    icon='camera-roll'
+                    size='md'
+                    iconColor='blue'
                   />
                 </div>
                 {this.state.open && (
                   <Flyout
                     anchor={this.anchor}
-                    idealDirection='up'
+                    idealDirection='down'
                     onDismiss={this.handleDismiss}
                     size='md'
                   >
                     <Box marginBottom={4} padding={4} alignContent='center'>
-                      <Heading bold align='center' size='sm'>
-                        Add New Tank
+                      <Heading bold align='center' size='xs'>
+                        Add new photos
                       </Heading>
                       <Divider />
                       <Box paddingY={1}>
                         <Label htmlFor='title'>
-                          <Text bold>Title</Text>
+                          <Text bold>Photo</Text>
                         </Label>
                       </Box>
 
                       <TextField
-                        id='title'
-                        errorMessage={
-                          !this.state.title
-                            ? "This field can't be blank!"
-                            : null
-                        }
-                        name='title'
-                        value={this.state.title}
-                        placeholder='ex."SPS Dominated Reef"'
-                        type='text'
+                        id='files'
+                        name='files'
+                        value={this.state.file}
+                        placeholder='Upload an image'
+                        type='file'
                         onChange={this.handleChange}
-                        onKeyDown={e =>
-                          this.createTankOnKeyPress(e, createTank)
-                        }
                       />
                       <Box paddingX={2} marginTop={3}>
                         <Button
                           color='blue'
-                          text='Add'
-                          disabled={!this.state.title}
-                          onClick={e => this.createTankOnClick(e, createTank)}
+                          text='Upload Image'
+                          disabled={loading || !this.state.files[0]}
+                          onClick={e => this.addImage(e, createTankImage)}
                         />
                       </Box>
                     </Box>
@@ -173,4 +175,4 @@ class AddNewTank extends Component {
   }
 }
 
-export default AddNewTank;
+export default AddImages;

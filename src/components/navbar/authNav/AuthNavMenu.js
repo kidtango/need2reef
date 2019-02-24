@@ -1,9 +1,9 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Box, Button, Layer, IconButton, Flyout } from 'gestalt';
-import Signup from '../../auth/Signup';
-import Signin from '../../auth/Signin';
+import { clearToken } from '../../../utils';
 
-class UnAuthNavMenu extends React.Component {
+class AuthNavMenu extends React.Component {
   state = {
     open: false
   };
@@ -13,6 +13,18 @@ class UnAuthNavMenu extends React.Component {
     this.setState({ open: !open });
   };
 
+  handleDismiss = () => {
+    const { open } = this.state;
+    this.setState({ open: !open });
+  };
+
+  logOut = () => {
+    clearToken();
+
+    this.setState({ open: false });
+
+    this.props.history.push('/');
+  };
   render() {
     return (
       <Box>
@@ -24,6 +36,7 @@ class UnAuthNavMenu extends React.Component {
         >
           <IconButton
             accessibilityExpanded={!!this.state.open}
+            accessibilityLabel='NavMenu'
             accessibilityHaspopup
             icon='ellipsis'
             iconColor='gray'
@@ -32,9 +45,14 @@ class UnAuthNavMenu extends React.Component {
         </div>
         {this.state.open && (
           <Layer>
-            <Flyout anchor={this.anchor} idealDirection='down' size={250}>
+            <Flyout
+              anchor={this.anchor}
+              idealDirection='down'
+              size={250}
+              // onDismiss={this.handleDismiss}
+            >
               <Box
-                padding={5}
+                padding={1}
                 color='blue'
                 alignContent='center'
                 alignItems='center'
@@ -46,7 +64,10 @@ class UnAuthNavMenu extends React.Component {
                   }
                 }}
               >
-                <Box marginTop={1}>
+                <Box>
+                  <Button text='Log out' color='blue' onClick={this.logOut} />
+                </Box>
+                <Box>
                   <Button text='FAQ' color='blue' />
                 </Box>
               </Box>
@@ -58,4 +79,4 @@ class UnAuthNavMenu extends React.Component {
   }
 }
 
-export default UnAuthNavMenu;
+export default withRouter(AuthNavMenu);

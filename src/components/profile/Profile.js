@@ -3,20 +3,18 @@ import { Box, IconButton, Sticky, Text, Avatar } from 'gestalt';
 import ProfileMenu from './ProfileMenu';
 import AddNewTank from './tank/AddNewTank';
 
-
-
 class Profile extends Component {
-  addTank = () => {};
-
   render() {
     const { session } = this.props;
     if (!session) return <p>Please create a profile</p>;
+
     const { me } = session;
+    console.log(me);
     return (
       <React.Fragment>
         <Sticky top={0} dangerouslySetZIndex={{ __zIndex: 2 }}>
           <Box
-            display='flex'
+            display='flex' 
             height={90}
             padding={5}
             shape='square'

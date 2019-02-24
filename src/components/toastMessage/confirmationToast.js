@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Toast, Image, Button } from 'gestalt';
+import { Box, Toast, Image } from 'gestalt';
 
 export default function confirmationToast() {
   return (

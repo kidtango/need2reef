@@ -1,50 +1,57 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import { CREATE_TANK_REPLY_MUTATION } from '../../graphql/mutations';
-import { Box, TextArea, Text, Flyout, Layer, IconButton } from 'gestalt';
 import SmallerSpinner from '../../spinner/SmallerSpinner';
+import { Box, IconButton, Flyout, Layer, TextArea } from 'gestalt';
+import { UPDATE_TANK_REPLY_MUTATION } from '../../graphql/mutations';
 
-class Reply extends Component {
+class EditReply extends Component {
   state = {
-    open: false
+    open: false,
+    editedReply: ''
   };
 
   handleClick = () => {
-    this.setState({ open: !this.state.open });
+    this.setState({
+      open: !this.state.open,
+      editedReply: this.props.reply
+    });
   };
 
   handleDismiss = () => {
     this.setState({ open: false });
   };
 
-  handleChange = ({ value }) => {
+  handleChange = ({ event }) => {
     this.setState({
-      value
+      [event.target.name]: event.target.value
     });
   };
 
-  createTankPostReply = async (e, PostReplyMutation, postId, refetch) => {
+  updateTankReply = async (e, updateTankReplyMutation, replyId, refetch) => {
     if (e.key === 'Enter') {
-      await PostReplyMutation({
+      await updateTankReplyMutation({
         variables: {
-          body: this.state.value,
-          postId
+          body: this.state.editedReply,
+          replyId
         }
       });
+      this.setState({ open: false });
 
       await refetch();
-      this.setState({ open: false });
     }
   };
 
   render() {
-    const { postId, refetch } = this.props;
+    const { replyId, refetch } = this.props;
     return (
-      <Mutation mutation={CREATE_TANK_REPLY_MUTATION}>
-        {(createTankReply, { loading, error }) => {
-          if (error) return <Text>uh ohhh... Something went wrong!</Text>;
-          if (loading) return <SmallerSpinner />;
-
+      <Mutation mutation={UPDATE_TANK_REPLY_MUTATION}>
+        {(updateTankReply, { loading, error }) => {
+          if (loading)
+            return (
+              <Box alignContent='center'>
+                <SmallerSpinner />
+              </Box>
+            );
           return (
             <React.Fragment>
               <div
@@ -57,7 +64,7 @@ class Reply extends Component {
                   accessibilityExpanded={!!this.state.open}
                   accessibilityHaspopup
                   onClick={this.handleClick}
-                  icon='speech-ellipsis'
+                  icon='edit'
                   size='xs'
                 />
               </div>
@@ -83,19 +90,20 @@ class Reply extends Component {
                     >
                       <form
                         onKeyDown={e =>
-                          this.createTankPostReply(
+                          this.updateTankReply(
                             e,
-                            createTankReply,
-                            postId,
+                            updateTankReply,
+                            replyId,
                             refetch
                           )
                         }
                       >
                         <TextArea
-                          id='discussions'
+                          id='editedReply'
                           onChange={this.handleChange}
-                          placeholder='Reply... Hit Enter to submit'
-                          value={this.state.value}
+                          value={this.state.editedReply}
+                          defaultValue={this.props.comment}
+                          name='editedReply'
                         />
                       </form>
                     </Box>
@@ -110,4 +118,4 @@ class Reply extends Component {
   }
 }
 
-export default Reply;
+export default EditReply;

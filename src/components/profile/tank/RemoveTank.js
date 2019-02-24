@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import { Box, Flyout, Text, Button, IconButton, Layer, Toast } from 'gestalt';
-import { DELETE_TANK_MUTATION } from '../../queries/index';
-import { GET_CURRENT_USER_PROFILE } from '../../queries/index';
-import confirmationToast from '../../toastMessage/confirmationToast';
+import { DELETE_TANK_MUTATION } from '../../graphql/mutations';
+import { GET_CURRENT_USER_PROFILE } from '../../graphql/queries';
 
 class RemoveTank extends Component {
   state = {

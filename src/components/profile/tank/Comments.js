@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { format } from 'date-fns';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { CREATE_TANK_COMMENT_MUTATION } from '../../graphql/mutations';
 import {
-  CREATE_TANK_COMMENT_MUTATION,
-  GET_COMMENTS_QUERY
-} from '../../queries/index';
-import { Box, TextArea, IconButton, Text, Avatar, Masonry } from 'gestalt';
+  GET_COMMENTS_QUERY,
+  GET_MORE_COMMENTS_QUERY
+} from '../../graphql/queries';
+
+import {
+  Box,
+  TextArea,
+  IconButton,
+  Text,
+  Avatar,
+  Layer,
+  Flyout,
+  Touchable
+} from 'gestalt';
 import Spinner from '../../spinner/Spinner';
 import Reply from './Reply';
+import DeleteComments from './DeleteComments';
+import DeleteReply from './DeleteReply';
+import EditComment from './EditComment';
+import EditReply from './EditReply';
 
 class Comments extends Component {
   state = {
     value: '',
-    showTextArea: false
+    open: false
   };
 
   handleClick = () => {
-    this.setState({ showTextArea: !this.state.showTextArea });
+    this.setState({ open: !this.state.open });
+  };
+
+  handleDismiss = () => {
+    this.setState({ open: false });
   };
 
   handleChange = ({ value }) => {
@@ -26,11 +44,50 @@ class Comments extends Component {
     });
   };
 
+  getMoreComments = (e, fetchMore, data, tankId) => {
+    const cursor = data.tankPostsConnection.pageInfo.endCursor;
+
+    fetchMore({
+      query: GET_MORE_COMMENTS_QUERY,
+      variables: {
+        cursor,
+        id: tankId
+      },
+
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const previousComments = previousResult.tankPostsConnection.edges;
+
+        const newComments = fetchMoreResult.tankPostsConnection.edges;
+
+        const newCursor =
+          fetchMoreResult.tankPostsConnection.pageInfo.endCursor;
+
+        const hasNextComments =
+          fetchMoreResult.tankPostsConnection.pageInfo.hasNextPage;
+
+        this.setState({ hasMoreComments: hasNextComments });
+
+        return {
+          tankPostsConnection: {
+            pageInfo: {
+              __typename:
+                previousResult.tankPostsConnection.pageInfo.__typename,
+              endCursor: newCursor,
+              hasNextPage: hasNextComments
+            },
+            __typename: previousResult.tankPostsConnection.__typename,
+            edges: [...previousComments, ...newComments]
+          }
+        };
+      }
+    });
+  };
+
   createTankComment = async (e, createPostMutation, tankId, refetch) => {
     // On "Enter" keyDown, submit form
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       //Create new post
-      const post = await createPostMutation({
+      await createPostMutation({
         variables: {
           body: this.state.value,
           tankId
@@ -38,15 +95,17 @@ class Comments extends Component {
       });
       //refetch comments
       await refetch();
+
       //close text area
-      this.setState({ showTextArea: false });
+      this.setState({ open: false, value: '' });
     }
   };
   render() {
     const { tankId } = this.props;
+
     return (
       <Query query={GET_COMMENTS_QUERY} variables={{ id: tankId }}>
-        {({ data, loading, error, refetch }) => {
+        {({ data, loading, error, refetch, fetchMore }) => {
           if (error) return <Text>uh ohhh... Something went wrong!</Text>;
           if (loading)
             return (
@@ -54,136 +113,260 @@ class Comments extends Component {
                 <Spinner />
               </Box>
             );
+          let hasMoreComments = data.tankPostsConnection.pageInfo.hasNextPage;
+
           return (
             <Mutation mutation={CREATE_TANK_COMMENT_MUTATION}>
               {(createTankPost, { loading, error }) => {
                 if (loading) return <Spinner />;
                 if (error) return <Text>uh ohhh... Something went wrong!</Text>;
                 return (
-                  <Box
-                    display='flex'
-                    direction='column'
-                    alignItems='start'
-                    justifyContent='start'
-                  >
-                    {data.tankPosts.map(post => (
-                      <Box>
-                        <Box display='flex' alignItems='center'>
-                          <Box paddingX={1} paddingY={3}>
-                            <Avatar name={post.author.name} size='sm' />
-                          </Box>
-                          <Box paddingX={1}>
-                            <Text bold size='xs' align='left'>
-                              {post.author.name}
-                            </Text>
-                          </Box>
-                        </Box>
-                        <Box paddingX={2}>
-                          <Text
-                            align='left'
-                            color='green'
-                            key={post.id}
-                            size='lg'
-                          >
-                            {post.body}
-                          </Text>
-
-                          <Box
-                            direction='row'
-                            alignItems='center'
-                            display='flex'
-                          >
-                            <Box paddingX={1}>
-                              <Text color='gray' italic size='xs'>
-                                {format(post.createdAt, 'MMMM d, YYYY', {
-                                  awareOfUnicodeTokens: true
-                                })}
-                              </Text>
-                            </Box>
-                            <Box paddingX={1}>
-                              <Reply postId={post.id} refetch={refetch} />
-                            </Box>
-                            <Box paddingX={1}>
-                              <IconButton icon='heart' size='sm' />
-                            </Box>
-                          </Box>
-                        </Box>
-                        {post.replies.map(reply => (
-                          <Box paddingX={6}>
+                  <React.Fragment>
+                    <Box
+                      display='flex'
+                      direction='column'
+                      alignItems='start'
+                      justifyContent='start'
+                      wrap
+                      shape='rounded'
+                      padding={2}
+                      color='lightGray'
+                    >
+                      {data.tankPostsConnection.edges.map(post => (
+                        <Box padding={1}>
+                          <Box maxWidth={450}>
                             <Box
                               display='flex'
-                              direction='row'
+                              justifyContent='start'
                               alignItems='center'
-                              padding={1}
+                              position='relative'
+                              width={450}
+                              wrap
                             >
-                              <Avatar name={reply.author.name} size='sm' />
+                              <Box paddingX={1} paddingY={2}>
+                                <Avatar
+                                  name={post.node.author.name}
+                                  size='sm'
+                                />
+                              </Box>
                               <Box paddingX={1}>
-                                <Text bold size='xs' key={reply.id}>
-                                  {reply.author.name}
+                                <Text bold size='xs' align='left'>
+                                  {post.node.author.name}
                                 </Text>
                               </Box>
+                              <Box paddingX={2} center>
+                                <DeleteComments
+                                  postId={post.node.id}
+                                  refetch={refetch}
+                                />
+                              </Box>
                             </Box>
-                            <Box paddingX={2} paddingY={3}>
-                              <Text color='orange' key={reply.id} size='lg'>
-                                {reply.body}
+                            <Box paddingX={3}>
+                              <Text
+                                align='left'
+                                color='green'
+                                key={post.node.id}
+                                size='sm'
+                                bold
+                              >
+                                {post.node.body}
                               </Text>
 
                               <Box
                                 direction='row'
                                 alignItems='center'
                                 display='flex'
+                                paddingY={1}
                               >
                                 <Box paddingX={1}>
                                   <Text color='gray' italic size='xs'>
-                                    {format(post.createdAt, 'MMMM d, YYYY', {
-                                      awareOfUnicodeTokens: true
-                                    })}
+                                    {format(
+                                      post.node.createdAt,
+                                      'MMM d, YYYY',
+                                      {
+                                        awareOfUnicodeTokens: true
+                                      }
+                                    )}
                                   </Text>
                                 </Box>
-                                <Box paddingX={1}>
-                                  <Reply postId={post.id} refetch={refetch} />
+                                <Box>
+                                  <Reply
+                                    postId={post.node.id}
+                                    refetch={refetch}
+                                  />
                                 </Box>
-                                <Box paddingX={1}>
-                                  <IconButton icon='heart' size='sm' />
+                                <Box>
+                                  {true && (
+                                    <EditComment
+                                      refetch={refetch}
+                                      comment={post.node.body}
+                                      postId={post.node.id}
+                                    />
+                                  )}
+                                </Box>
+                                <Box>
+                                  <IconButton icon='heart' size='xs' />
                                 </Box>
                               </Box>
                             </Box>
+                            {post.node.replies.map(reply => (
+                              <Box paddingX={6}>
+                                <Box
+                                  display='flex'
+                                  direction='row'
+                                  alignItems='center'
+                                  position='relative'
+                                  wrap
+                                >
+                                  <Avatar name={reply.author.name} size='sm' />
+                                  <Box paddingX={1}>
+                                    <Text bold size='xs' key={reply.id}>
+                                      {reply.author.name}
+                                    </Text>
+                                  </Box>
+                                  <Box paddingX={2}>
+                                    {true && (
+                                      <DeleteReply
+                                        replyId={reply.id}
+                                        refetch={refetch}
+                                      />
+                                    )}
+                                  </Box>
+                                </Box>
+                                <Box paddingX={2} paddingY={2}>
+                                  <Text
+                                    color='orange'
+                                    key={reply.id}
+                                    size='sm'
+                                    bold
+                                  >
+                                    {reply.body}
+                                  </Text>
+                                  <Box
+                                    direction='row'
+                                    alignItems='center'
+                                    display='flex'
+                                  >
+                                    <Box>
+                                      <Text color='gray' italic size='xs'>
+                                        {format(
+                                          post.node.createdAt,
+                                          'MMM d, YYYY',
+                                          {
+                                            awareOfUnicodeTokens: true
+                                          }
+                                        )}
+                                      </Text>
+                                    </Box>
+                                    <Box>
+                                      <Reply
+                                        postId={post.node.id}
+                                        refetch={refetch}
+                                      />
+                                    </Box>
+                                    <Box>
+                                      <EditReply
+                                        replyId={reply.id}
+                                        refetch={refetch}
+                                        reply={reply.body}
+                                      />
+                                    </Box>
+                                    <Box paddingX={1}>
+                                      <IconButton icon='heart' size='xs' />
+                                    </Box>
+                                  </Box>
+                                </Box>
+                              </Box>
+                            ))}
                           </Box>
-                        ))}
-                      </Box>
-                    ))}
+                        </Box>
+                      ))}
 
-                    {/* Toggle text area for creating new posts */}
-                    <Box>
-                      <IconButton
-                        icon='speech-ellipsis'
-                        size='xl'
-                        onClick={this.handleClick}
-                      />
+                      {/* Toggle text area for creating new posts */}
 
-                      <Box>
-                        {this.state.showTextArea && (
-                          <form
-                            onKeyDown={e =>
-                              this.createTankComment(
-                                e,
-                                createTankPost,
-                                tankId,
-                                refetch
-                              )
+                      <Box
+                        justifyContent='between'
+                        alignItems='stretch'
+                        direction='column'
+                        display='flex'
+                        wrap
+                        padding={2}
+                      >
+                        {/* Load more comments button */}
+                        <Box display='flex' justifyContent='end' padding={1}>
+                          <Touchable
+                            onTouch={e =>
+                              this.getMoreComments(e, fetchMore, data, tankId)
                             }
                           >
-                            <TextArea
-                              id='discussions'
-                              onChange={this.handleChange}
-                              placeholder='Start a discussion with me... Hit Enter to submit'
-                              value={this.state.value}
+                            <Text bold color='gray' size='sm'>
+                              {hasMoreComments ? 'More Commments' : null}
+                            </Text>
+                          </Touchable>
+                        </Box>
+                        <Box alignItems='center' display='flex' flex='grow'>
+                          <div
+                            style={{ display: 'inline-block' }}
+                            ref={c => {
+                              this.anchor = c;
+                            }}
+                          >
+                            <IconButton
+                              icon='speech-ellipsis'
+                              size='xl'
+                              onClick={this.handleClick}
                             />
-                          </form>
+                          </div>
+                        </Box>
+
+                        {this.state.open && (
+                          <Layer>
+                            <Flyout
+                              anchor={this.anchor}
+                              idealDirection='up'
+                              onDismiss={this.handleDismiss}
+                              size='xl'
+                              color='darkGray'
+                            >
+                              <Box
+                                padding={1}
+                                flex='grow'
+                                alignContent='center'
+                                dangerouslySetInlineStyle={{
+                                  __style: {
+                                    zIndex: 50
+                                  }
+                                }}
+                              >
+                                <form
+                                  onKeyDown={e =>
+                                    this.createTankComment(
+                                      e,
+                                      createTankPost,
+                                      tankId,
+                                      refetch
+                                    )
+                                  }
+                                >
+                                  <TextArea
+                                    id='comment'
+                                    onChange={this.handleChange}
+                                    placeholder={this.state.value}
+                                    value={this.state.value}
+                                    errorMessage={
+                                      this.state.value.length >= 100
+                                        ? 'Please limit texts to 100 characters '
+                                        : null
+                                    }
+                                  />
+                                </form>
+                              </Box>
+                            </Flyout>
+                          </Layer>
                         )}
                       </Box>
                     </Box>
-                  </Box>
+                  </React.Fragment>
                 );
               }}
             </Mutation>

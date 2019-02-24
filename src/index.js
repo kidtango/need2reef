@@ -7,12 +7,14 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'gestalt/dist/gestalt.css';
 import { Provider } from './context';
 
-import App from './components/App';
+import Home from './components/Home';
 import Profile from './components/profile/Profile';
 import Navbar from './components/navbar/Navbar';
 import { endpoint } from './config';
 import { getToken } from './utils';
 import withSession from './components/withSession';
+import Signup from './components/auth/Signup';
+import PleaseSignin from './components/auth/PleaseSignin';
 
 // using Apollo client to send auth header to backend
 const client = new ApolloClient({
@@ -41,8 +43,16 @@ const Root = ({ refetch, session }) => (
     <Provider>
       <Navbar session={session} />
       <Switch>
-        <Route component={App} exact path='/' />
-        <Route render={() => <Profile session={session} />} path='/profile' />
+        <Route render={() => <Home session={session} />} exact path='/' />
+        <Route
+          render={() => (
+            <PleaseSignin>
+              <Profile session={session} />
+            </PleaseSignin>
+          )}
+          path='/profile'
+        />
+        <Route component={Signup} path='/signup' />
       </Switch>
     </Provider>
   </Router>

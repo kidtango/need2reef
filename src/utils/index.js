@@ -14,3 +14,13 @@ export const getToken = (tokenKey = TOKEN_KEY) => {
   }
   return [];
 };
+
+// Clear jwt token from local storage
+export const clearToken = (tokenKey = TOKEN_KEY) => {
+  if (localStorage) {
+    localStorage.removeItem(tokenKey);
+  }
+};
+
+// check if object is empty
+export const isEmpty = obj => Object.keys(obj).length === 0;
