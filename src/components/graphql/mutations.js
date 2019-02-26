@@ -105,10 +105,19 @@ export const DELETE_FEED_MUTATION = gql`
   }
 `;
 
-// Add comments for feed
+// Add feed comments
 export const CREATE_FEED_COMMENT = gql`
   mutation CREATE_FEED_COMMENT($body: String!, $feedId: ID!) {
     createFeedComment(data: { feedId: $feedId, body: $body }) {
+      id
+    }
+  }
+`;
+
+// Delete feed comments
+export const DELETE_FEED_COMMENT = gql`
+  mutation DELETE_FEED_COMMENT($id: ID!) {
+    deleteFeedComment(id: $id) {
       id
     }
   }

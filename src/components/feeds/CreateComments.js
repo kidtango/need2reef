@@ -34,6 +34,11 @@ class CreateComments extends Component {
           feedId: this.props.feedId
         }
       });
+
+      this.setState({
+        open: false,
+        value: ''
+      });
     }
   };
 

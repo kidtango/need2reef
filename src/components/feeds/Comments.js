@@ -4,10 +4,12 @@ import { Box, IconButton, Text, Avatar, Container, Mask } from 'gestalt';
 import { format } from 'date-fns';
 import { GET_FEED_COMMENTS_QUERY } from '../graphql/queries';
 import SmallerSpinner from '../spinner/SmallerSpinner';
+import DeleteComment from './DeleteComment';
 
-const Comments = ({ feedId }) => {
+const Comments = ({ feed }) => {
+  const { id } = feed.node;
   return (
-    <Query query={GET_FEED_COMMENTS_QUERY} variables={{ id: feedId }}>
+    <Query query={GET_FEED_COMMENTS_QUERY} variables={{ id: id }}>
       {({ data, loading, error, refetch }) => {
         if (error) return <p>Error..</p>;
         if (loading) return <SmallerSpinner />;
@@ -16,6 +18,7 @@ const Comments = ({ feedId }) => {
           <Box maxWidth={450}>
             {data.feedCommentsConnection.edges.map(comment => {
               const feedComment = comment.node;
+
               return (
                 <React.Fragment>
                   <Box
@@ -35,7 +38,11 @@ const Comments = ({ feedId }) => {
                       </Text>
                     </Box>
                     <Box paddingX={2} center>
-                      Delete
+                      <DeleteComment
+                        refetch={refetch}
+                        feedComment={feedComment}
+                        feedId={id}
+                      />
                     </Box>
                   </Box>
                   <Box paddingX={3} paddingY={1}>
@@ -84,7 +91,7 @@ const Comments = ({ feedId }) => {
                         </Box>
                         <Box paddingX={2} paddingY={2}>
                           <Text color='orange' size='sm' bold>
-                            Reply body...
+                            {reply.body}
                           </Text>
                           <Box
                             direction='row'

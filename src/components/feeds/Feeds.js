@@ -102,7 +102,7 @@ class Feeds extends Component {
                       </Box>
                       <Box paddingX={5}>
                         {/* Comment Section */}
-                        <Comments feedId={feed.node.id} />
+                        <Comments feed={feed} />
                         {/* add new comments section*/}
                         <CreateComments feedId={feed.node.id} />
                       </Box>

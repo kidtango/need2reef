@@ -93,7 +93,7 @@ export const GET_COMMENTS_QUERY = gql`
           id
           body
           createdAt
-          replies {
+          replies(orderBy: createdAt_DESC) {
             id
             body
             createdAt
@@ -131,7 +131,7 @@ export const GET_MORE_COMMENTS_QUERY = gql`
           id
           body
           createdAt
-          replies {
+          replies(orderBy: createdAt_DESC) {
             id
             body
             createdAt
@@ -198,7 +198,7 @@ export const GET_FEED_COMMENTS_QUERY = gql`
           createdAt
           id
           body
-          reply {
+          reply(orderBy: createdAt_DESC) {
             id
             body
             author {
