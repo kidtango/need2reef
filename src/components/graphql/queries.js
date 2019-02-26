@@ -78,7 +78,7 @@ export const GET_CURRENT_USER_PROFILE = gql`
 
 // Get comments for tank profiles
 export const GET_COMMENTS_QUERY = gql`
-  query getComments($id: ID!) {
+  query GET_COMMENTS_QUERY($id: ID!) {
     tankPostsConnection(
       orderBy: createdAt_DESC
       first: 4
@@ -114,7 +114,7 @@ export const GET_COMMENTS_QUERY = gql`
 
 // Get more comments for tank profiles
 export const GET_MORE_COMMENTS_QUERY = gql`
-  query getMoreComments($cursor: String!, $id: ID!) {
+  query GET_MORE_COMMENTS_QUERY($cursor: String!, $id: ID!) {
     tankPostsConnection(
       orderBy: createdAt_DESC
       after: $cursor
@@ -179,7 +179,7 @@ export const GET_FEEDS_QUERY = gql`
 
 // Query for feed comments
 export const GET_FEED_COMMENTS_QUERY = gql`
-  query getFeedComments($id: ID!) {
+  query GET_FEED_COMMENTS_QUERY($id: ID!) {
     feedCommentsConnection(
       where: { feed: { id: $id } }
       orderBy: createdAt_DESC
@@ -198,13 +198,33 @@ export const GET_FEED_COMMENTS_QUERY = gql`
           createdAt
           id
           body
-          reply(orderBy: createdAt_DESC) {
+        }
+      }
+    }
+  }
+`;
+
+// Query replies for feed comments
+export const GET_FEED_COMMENT_REPLIES = gql`
+  query GET_FEED_COMMENT_REPLIES($commentId: ID!) {
+    feedCommentRepliesConnection(
+      orderBy: createdAt_DESC
+      first: 4
+      where: { comment: { id: $commentId } }
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          body
+          createdAt
+          author {
             id
-            body
-            author {
-              id
-              name
-            }
+            name
           }
         }
       }

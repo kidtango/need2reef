@@ -114,6 +114,15 @@ export const CREATE_FEED_COMMENT = gql`
   }
 `;
 
+// Create reply for feed comments
+export const CREATE_FEED_COMMENT_REPLY = gql`
+  mutation CREATE_FEED_COMMENT_REPLY($commentId: ID!, $body: String!) {
+    createFeedCommentReply(data: { commentId: $commentId, body: $body }) {
+      id
+    }
+  }
+`;
+
 // Delete feed comments
 export const DELETE_FEED_COMMENT = gql`
   mutation DELETE_FEED_COMMENT($id: ID!) {

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
-import { CREATE_TANK_REPLY_MUTATION } from '../../graphql/mutations';
+import { CREATE_FEED_COMMENT_REPLY } from '../graphql/mutations';
+import { GET_FEED_COMMENT_REPLIES } from '../graphql/queries';
 import { Box, TextArea, Text, Flyout, Layer, IconButton } from 'gestalt';
-import SmallerSpinner from '../../spinner/SmallerSpinner';
+import SmallerSpinner from '../spinner/SmallerSpinner';
 
 class CreateReply extends Component {
   state = {
@@ -23,25 +24,39 @@ class CreateReply extends Component {
     });
   };
 
-  createTankPostReply = async (e, PostReplyMutation, postId, refetch) => {
+  createTankPostReply = async (
+    e,
+    createFeedCommentReply,
+    commentId,
+    refetch
+  ) => {
     if (e.key === 'Enter') {
-      await PostReplyMutation({
+      await createFeedCommentReply({
         variables: {
           body: this.state.value,
-          postId
+          commentId
         }
       });
 
-      await refetch();
-      this.setState({ open: false });
+      this.setState({ open: false, value: '' });
     }
   };
 
   render() {
-    const { postId, refetch } = this.props;
+    const { commentId, refetch } = this.props;
     return (
-      <Mutation mutation={CREATE_TANK_REPLY_MUTATION}>
-        {(createTankReply, { loading, error }) => {
+      <Mutation
+        mutation={CREATE_FEED_COMMENT_REPLY}
+        refetchQueries={[
+          {
+            query: GET_FEED_COMMENT_REPLIES,
+            variables: {
+              commentId
+            }
+          }
+        ]}
+      >
+        {(createFeedCommentReply, { loading, error }) => {
           if (error) return <Text>uh ohhh... Something went wrong!</Text>;
           if (loading) return <SmallerSpinner />;
 
@@ -85,8 +100,8 @@ class CreateReply extends Component {
                         onKeyDown={e =>
                           this.createTankPostReply(
                             e,
-                            createTankReply,
-                            postId,
+                            createFeedCommentReply,
+                            commentId,
                             refetch
                           )
                         }

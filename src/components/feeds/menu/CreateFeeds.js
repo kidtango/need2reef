@@ -65,7 +65,6 @@ class CreateFeeds extends Component {
         }
       );
       const image = await res.json();
-      console.log('TCL: createFeedOnKeyPress -> image', image.secure_url);
 
       await createFeed({
         variables: {

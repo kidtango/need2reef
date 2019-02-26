@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import { GET_FEED_COMMENTS_QUERY } from '../graphql/queries';
 import SmallerSpinner from '../spinner/SmallerSpinner';
 import DeleteComment from './DeleteComment';
+import Reply from './Reply';
+import CreateReply from './CreateReply';
 
 const Comments = ({ feed }) => {
   const { id } = feed.node;
@@ -18,7 +20,6 @@ const Comments = ({ feed }) => {
           <Box maxWidth={450}>
             {data.feedCommentsConnection.edges.map(comment => {
               const feedComment = comment.node;
-
               return (
                 <React.Fragment>
                   <Box
@@ -63,7 +64,12 @@ const Comments = ({ feed }) => {
                           })}
                         </Text>
                       </Box>
-                      <Box>Reply</Box>
+                      <Box>
+                        <CreateReply
+                          commentId={feedComment.id}
+                          refetch={refetch}
+                        />
+                      </Box>
                       <Box>Edit</Box>
                       <Box>
                         <IconButton icon='heart' size='xs' />
@@ -71,51 +77,8 @@ const Comments = ({ feed }) => {
                     </Box>
                   </Box>
 
-                  <Box paddingX={6}>
-                    {feedComment.reply.map(reply => (
-                      <React.Fragment>
-                        <Box
-                          display='flex'
-                          direction='row'
-                          alignItems='center'
-                          position='relative'
-                          wrap
-                        >
-                          <Avatar name='Tiger' size='sm' />
-                          <Box paddingX={1}>
-                            <Text bold size='xs'>
-                              Tiger
-                            </Text>
-                          </Box>
-                          <Box paddingX={2}>Delete Reply</Box>
-                        </Box>
-                        <Box paddingX={2} paddingY={2}>
-                          <Text color='orange' size='sm' bold>
-                            {reply.body}
-                          </Text>
-                          <Box
-                            direction='row'
-                            alignItems='center'
-                            display='flex'
-                          >
-                            <Box>
-                              <Text color='gray' italic size='xs'>
-                                12 dec
-                                {/* {format(post.node.createdAt, 'MMM d, YYYY', {
-                            awareOfUnicodeTokens: true
-                          })} */}
-                              </Text>
-                            </Box>
-                            <Box>Reply</Box>
-                            <Box>Edit</Box>
-                            <Box paddingX={1}>
-                              <IconButton icon='heart' size='xs' />
-                            </Box>
-                          </Box>
-                        </Box>
-                      </React.Fragment>
-                    ))}
-                  </Box>
+                  {/* Reply section */}
+                  <Reply feedComment={feedComment} />
                 </React.Fragment>
               );
             })}

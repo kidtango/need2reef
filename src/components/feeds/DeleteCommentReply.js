@@ -6,7 +6,7 @@ import { DELETE_FEED_COMMENT } from '../graphql/mutations';
 import { GET_FEED_COMMENTS_QUERY } from '../graphql/queries';
 import withSession from '../withSession';
 
-class DeleteComment extends Component {
+class DeleteCommentReply extends Component {
   state = {
     open: false,
     showTextArea: false
@@ -38,7 +38,7 @@ class DeleteComment extends Component {
 
   render() {
     const { feedComment, session } = this.props;
-    const ownsFeedComment = session.me.id === feedComment.author.id;
+    // const ownsFeedComment = session.me.id === feedComment.author.id;
 
     return (
       <Mutation
@@ -99,7 +99,7 @@ class DeleteComment extends Component {
                       <Button
                         color='white'
                         text='Delete'
-                        disabled={!ownsFeedComment}
+                        disabled={!true}
                         size='sm'
                         onClick={e => this.onHandleClick(e, deleteFeedComment)}
                       />
@@ -115,4 +115,4 @@ class DeleteComment extends Component {
   }
 }
 
-export default withSession(DeleteComment);
+export default withSession(DeleteCommentReply);
