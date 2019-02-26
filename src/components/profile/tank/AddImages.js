@@ -35,6 +35,7 @@ class AddImages extends Component {
     // console.log(e.target.files[0]);
     let files = [];
     files.push(event.target.files[0]);
+    console.log('TCL: AddImages -> handleChange -> files', files);
     this.setState({
       files
     });
@@ -44,6 +45,7 @@ class AddImages extends Component {
     const { files } = this.state;
 
     const data = new FormData();
+
     data.append('file', files[0]);
     data.append('upload_preset', 'tweef1');
 

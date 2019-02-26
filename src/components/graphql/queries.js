@@ -45,6 +45,7 @@ export const MORE_TANK_PROFILES_QUERY = gql`
 export const GET_CURRENT_USER = gql`
   query {
     me {
+      id
       name
       email
       createdAt
@@ -152,7 +153,7 @@ export const GET_MORE_COMMENTS_QUERY = gql`
 // Query for feeds
 export const GET_FEEDS_QUERY = gql`
   query {
-    feedsConnection(orderBy: createdAt_DESC, first: 4) {
+    feedsConnection(orderBy: createdAt_DESC, first: 20) {
       pageInfo {
         endCursor
         hasNextPage
@@ -168,6 +169,42 @@ export const GET_FEEDS_QUERY = gql`
           }
           author {
             name
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Query for feed comments
+export const GET_FEED_COMMENTS_QUERY = gql`
+  query getFeedComments($id: ID!) {
+    feedCommentsConnection(
+      where: { feed: { id: $id } }
+      orderBy: createdAt_DESC
+      first: 4
+    ) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        node {
+          author {
+            id
+            name
+          }
+          createdAt
+          id
+          body
+          reply {
+            id
+            body
+            author {
+              id
+              name
+            }
           }
         }
       }

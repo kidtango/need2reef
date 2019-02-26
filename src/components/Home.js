@@ -7,7 +7,7 @@ import Signin from './auth/Signin';
 import Feeds from './feeds/Feeds';
 
 const Home = ({ session }) =>
-  getToken().length !== 0 ? <Feeds /> : <Signin />;
+  getToken().length !== 0 ? <Feeds session={session} /> : <Signin />;
 // <Feeds />
 
 export default Home;

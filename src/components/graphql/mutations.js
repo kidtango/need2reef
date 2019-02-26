@@ -1,7 +1,5 @@
 import { gql } from 'apollo-boost';
 
-
-
 // Create new tank
 export const CREATE_TANK_MUTATION = gql`
   mutation CREATE_TANK($title: String!, $profileId: String!) {
@@ -30,8 +28,6 @@ export const CREATE_TANK_COMMENT_MUTATION = gql`
     }
   }
 `;
-
-
 
 // Delete comments - Tank profile
 export const DELETE_TANK_POST_MUTATION = gql`
@@ -91,3 +87,29 @@ export const CREATE_TANK_IMAGE_MUTATION = gql`
   }
 `;
 
+// Add new feeds
+export const CREATE_NEW_FEED_MUTATION = gql`
+  mutation CREATE_NEW_FEED_MUTATION($message: String!, $url: String!) {
+    createFeed(data: { url: $url, message: $message }) {
+      id
+    }
+  }
+`;
+
+// Delete feeds
+export const DELETE_FEED_MUTATION = gql`
+  mutation DELETE_FEED_MUTATION($id: ID!) {
+    deleteFeed(id: $id) {
+      id
+    }
+  }
+`;
+
+// Add comments for feed
+export const CREATE_FEED_COMMENT = gql`
+  mutation CREATE_FEED_COMMENT($body: String!, $feedId: ID!) {
+    createFeedComment(data: { feedId: $feedId, body: $body }) {
+      id
+    }
+  }
+`;
