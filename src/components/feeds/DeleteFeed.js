@@ -110,4 +110,4 @@ class DeleteFeed extends Component {
   }
 }
 
-export default withSession(DeleteFeed);
+export default DeleteFeed;

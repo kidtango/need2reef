@@ -24,7 +24,7 @@ class DeleteComment extends Component {
     this.setState({ open: false });
   };
 
-  onHandleClick = async (e, deleteFeedComment) => {
+  onHandleClick = async (e, deleteFeedComment, refetch) => {
     await deleteFeedComment({
       variables: {
         id: this.props.feedComment.id
@@ -34,24 +34,15 @@ class DeleteComment extends Component {
     this.setState({ open: false });
 
     // Refetch comments and update UI
+    refetch();
   };
 
   render() {
-    const { feedComment, session } = this.props;
+    const { feedComment, session, refetch } = this.props;
     const ownsFeedComment = session.me.id === feedComment.author.id;
 
     return (
-      <Mutation
-        mutation={DELETE_FEED_COMMENT}
-        refetchQueries={[
-          {
-            query: GET_FEED_COMMENTS_QUERY,
-            variables: {
-              id: this.props.feedId
-            }
-          }
-        ]}
-      >
+      <Mutation mutation={DELETE_FEED_COMMENT}>
         {(deleteFeedComment, { loading, error }) => {
           if (error) return <p>Something went wrong!!!</p>;
           if (loading)
@@ -101,7 +92,9 @@ class DeleteComment extends Component {
                         text='Delete'
                         disabled={!ownsFeedComment}
                         size='sm'
-                        onClick={e => this.onHandleClick(e, deleteFeedComment)}
+                        onClick={e =>
+                          this.onHandleClick(e, deleteFeedComment, refetch)
+                        }
                       />
                     </Box>
                   </Flyout>
@@ -115,4 +108,4 @@ class DeleteComment extends Component {
   }
 }
 
-export default withSession(DeleteComment);
+export default DeleteComment;

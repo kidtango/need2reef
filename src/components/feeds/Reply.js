@@ -1,19 +1,20 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import { Box, IconButton, Text, Avatar, Container, Mask } from 'gestalt';
+import { Box, IconButton, Text, Avatar } from 'gestalt';
 import { format } from 'date-fns';
 import { GET_FEED_COMMENT_REPLIES } from '../graphql/queries';
 import SmallerSpinner from '../spinner/SmallerSpinner';
 import CreateReply from './CreateReply';
 import DeleteCommentReply from './DeleteCommentReply';
+import EditCommentReply from './EditCommentReply';
 
-const Reply = ({ feedComment }) => {
+const Reply = ({ feedComment, session }) => {
   return (
     <Query
       query={GET_FEED_COMMENT_REPLIES}
       variables={{ commentId: feedComment.id }}
     >
-      {({ data, loading, error }) => {
+      {({ data, loading, error, refetch }) => {
         if (error) return <p>Something went wrong</p>;
         if (loading) return <SmallerSpinner />;
 
@@ -35,13 +36,17 @@ const Reply = ({ feedComment }) => {
                     </Text>
                   </Box>
                   <Box paddingX={2}>
-                    <DeleteCommentReply />
+                    <DeleteCommentReply
+                      reply={reply.node}
+                      feedComment={feedComment}
+                    />
                   </Box>
                 </Box>
                 <Box paddingX={2} paddingY={2}>
                   <Text color='orange' size='sm' bold>
                     {reply.node.body}
                   </Text>
+
                   <Box direction='row' alignItems='center' display='flex'>
                     <Box>
                       <Text color='gray' italic size='xs'>
@@ -53,7 +58,14 @@ const Reply = ({ feedComment }) => {
                     <Box>
                       <CreateReply commentId={feedComment.id} />
                     </Box>
-                    <Box>Edit</Box>
+                    <Box>
+                      <EditCommentReply
+                        commentReply={reply.node}
+                        refetch={refetch}
+                        session={session}
+                        commentReplyBody={reply.node.body}
+                      />
+                    </Box>
                     <Box paddingX={1}>
                       <IconButton icon='heart' size='xs' />
                     </Box>

@@ -13,7 +13,6 @@ import {
   Label,
   Divider,
   Layer,
-  Toast,
   TextField
 } from 'gestalt';
 import Spinner from '../../spinner/SmallerSpinner';
@@ -34,7 +33,6 @@ class CreateFeeds extends Component {
   handleFileChange = ({ event }) => {
     let files = [];
     files.push(event.target.files[0]);
-    console.log('TCL: CreateFeeds -> handleChange -> files', files[0]);
 
     this.setState({
       files
@@ -98,7 +96,6 @@ class CreateFeeds extends Component {
       }
     );
     const image = await res.json();
-    console.log('TCL: createFeedOnKeyPress -> image', image.secure_url);
 
     await createFeed({
       variables: {
@@ -148,7 +145,7 @@ class CreateFeeds extends Component {
                     accessibilityLabel='add'
                     accessibilityHaspopup
                     onClick={this.handleClick}
-                    icon='add'
+                    icon='speech-ellipsis'
                     size='lg'
                   />
                 </div>

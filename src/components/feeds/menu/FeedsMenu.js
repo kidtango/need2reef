@@ -42,11 +42,7 @@ const FeedsMenu = ({ session, refetch }) => {
           </Box>
 
           <Box paddingX={2} flex='grow'>
-            <IconButton
-              accessibilityLabel='speech-ellipsis'
-              icon='speech-ellipsis'
-              size='lg'
-            />
+            <IconButton accessibilityLabel='add' icon='add' size='lg' />
           </Box>
         </Box>
       </Box>

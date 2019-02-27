@@ -7,8 +7,10 @@ import SmallerSpinner from '../spinner/SmallerSpinner';
 import DeleteComment from './DeleteComment';
 import Reply from './Reply';
 import CreateReply from './CreateReply';
+import EditComment from './EditComment';
+import withSession from '../withSession';
 
-const Comments = ({ feed }) => {
+const Comments = ({ feed, session }) => {
   const { id } = feed.node;
   return (
     <Query query={GET_FEED_COMMENTS_QUERY} variables={{ id: id }}>
@@ -43,6 +45,7 @@ const Comments = ({ feed }) => {
                         refetch={refetch}
                         feedComment={feedComment}
                         feedId={id}
+                        session={session}
                       />
                     </Box>
                   </Box>
@@ -70,7 +73,14 @@ const Comments = ({ feed }) => {
                           refetch={refetch}
                         />
                       </Box>
-                      <Box>Edit</Box>
+                      <Box>
+                        <EditComment
+                          refetch={refetch}
+                          feedCommentBody={comment.node.body}
+                          feedComment={comment.node}
+                          session={session}
+                        />
+                      </Box>
                       <Box>
                         <IconButton icon='heart' size='xs' />
                       </Box>
@@ -78,7 +88,7 @@ const Comments = ({ feed }) => {
                   </Box>
 
                   {/* Reply section */}
-                  <Reply feedComment={feedComment} />
+                  <Reply feedComment={feedComment} session={session} />
                 </React.Fragment>
               );
             })}
@@ -89,4 +99,4 @@ const Comments = ({ feed }) => {
   );
 };
 
-export default Comments;
+export default withSession(Comments);

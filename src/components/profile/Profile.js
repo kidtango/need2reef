@@ -9,12 +9,12 @@ class Profile extends Component {
     if (!session) return <p>Please create a profile</p>;
 
     const { me } = session;
-    console.log(me);
+
     return (
       <React.Fragment>
         <Sticky top={0} dangerouslySetZIndex={{ __zIndex: 2 }}>
           <Box
-            display='flex' 
+            display='flex'
             height={90}
             padding={5}
             shape='square'

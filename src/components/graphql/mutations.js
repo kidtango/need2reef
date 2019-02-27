@@ -114,6 +114,24 @@ export const CREATE_FEED_COMMENT = gql`
   }
 `;
 
+// Delete feed comments
+export const DELETE_FEED_COMMENT = gql`
+  mutation DELETE_FEED_COMMENT($id: ID!) {
+    deleteFeedComment(id: $id) {
+      id
+    }
+  }
+`;
+
+// Update feed comments
+export const UPDATE_FEED_COMMENT_MUTATION = gql`
+  mutation UPDATE_FEED_COMMENT_MUTATION($feedCommentId: ID!, $body: String!) {
+    updateFeedComment(data: { feedCommentId: $feedCommentId, body: $body }) {
+      id
+    }
+  }
+`;
+
 // Create reply for feed comments
 export const CREATE_FEED_COMMENT_REPLY = gql`
   mutation CREATE_FEED_COMMENT_REPLY($commentId: ID!, $body: String!) {
@@ -123,10 +141,24 @@ export const CREATE_FEED_COMMENT_REPLY = gql`
   }
 `;
 
-// Delete feed comments
-export const DELETE_FEED_COMMENT = gql`
-  mutation DELETE_FEED_COMMENT($id: ID!) {
-    deleteFeedComment(id: $id) {
+// Delete reply for feed comments
+export const DELETE_FEED_COMMENT_REPLY = gql`
+  mutation DELETE_FEED_COMMENT_REPLY($replyId: ID!) {
+    deleteFeedCommentReply(id: $replyId) {
+      id
+    }
+  }
+`;
+
+// Update feed comment replies
+export const UPDATE_FEED_COMMENT_REPLY_MUTATION = gql`
+  mutation UPDATE_FEED_COMMENT_REPLY_MUTATION(
+    $feedCommentReplyId: ID!
+    $body: String!
+  ) {
+    updateFeedCommentReply(
+      data: { feedCommentReplyId: $feedCommentReplyId, body: $body }
+    ) {
       id
     }
   }

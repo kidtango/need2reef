@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import SmallerSpinner from '../spinner/SmallerSpinner';
 import { Box, IconButton, Flyout, Button } from 'gestalt';
-import { DELETE_FEED_COMMENT } from '../graphql/mutations';
-import { GET_FEED_COMMENTS_QUERY } from '../graphql/queries';
+import { DELETE_FEED_COMMENT_REPLY } from '../graphql/mutations';
+import { GET_FEED_COMMENT_REPLIES } from '../graphql/queries';
 import withSession from '../withSession';
 
 class DeleteCommentReply extends Component {
@@ -24,35 +24,36 @@ class DeleteCommentReply extends Component {
     this.setState({ open: false });
   };
 
-  onHandleClick = async (e, deleteFeedComment) => {
-    await deleteFeedComment({
+  onHandleClick = async (e, deleteFeedCommentReply, reply) => {
+    await deleteFeedCommentReply({
       variables: {
-        id: this.props.feedComment.id
+        replyId: reply.id
       }
     });
 
-    this.setState({ open: false });
+    this.setState({ open: false, value: '' });
 
     // Refetch comments and update UI
   };
 
   render() {
-    const { feedComment, session } = this.props;
-    // const ownsFeedComment = session.me.id === feedComment.author.id;
+    const { reply, session, feedComment } = this.props;
+
+    const ownsFeedCommentReply = session.me.id === reply.author.id;
 
     return (
       <Mutation
-        mutation={DELETE_FEED_COMMENT}
+        mutation={DELETE_FEED_COMMENT_REPLY}
         refetchQueries={[
           {
-            query: GET_FEED_COMMENTS_QUERY,
+            query: GET_FEED_COMMENT_REPLIES,
             variables: {
-              id: this.props.feedId
+              commentId: feedComment.id
             }
           }
         ]}
       >
-        {(deleteFeedComment, { loading, error }) => {
+        {(deleteFeedCommentReply, { loading, error }) => {
           if (error) return <p>Something went wrong!!!</p>;
           if (loading)
             return (
@@ -99,9 +100,11 @@ class DeleteCommentReply extends Component {
                       <Button
                         color='white'
                         text='Delete'
-                        disabled={!true}
+                        disabled={!ownsFeedCommentReply}
                         size='sm'
-                        onClick={e => this.onHandleClick(e, deleteFeedComment)}
+                        onClick={e =>
+                          this.onHandleClick(e, deleteFeedCommentReply, reply)
+                        }
                       />
                     </Box>
                   </Flyout>

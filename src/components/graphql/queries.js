@@ -123,7 +123,6 @@ export const GET_MORE_COMMENTS_QUERY = gql`
     ) {
       pageInfo {
         endCursor
-
         hasNextPage
       }
       edges {
@@ -153,7 +152,34 @@ export const GET_MORE_COMMENTS_QUERY = gql`
 // Query for feeds
 export const GET_FEEDS_QUERY = gql`
   query {
-    feedsConnection(orderBy: createdAt_DESC, first: 20) {
+    feedsConnection(orderBy: createdAt_DESC, first: 4) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        node {
+          createdAt
+          id
+          message
+          createdAt
+          images {
+            url
+          }
+          author {
+            name
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Get more feeds
+export const GET_MORE_FEEDS_QUERY = gql`
+  query GET_MORE_FEEDS_QUERY($cursor: String!) {
+    feedsConnection(orderBy: createdAt_DESC, first: 10, after: $cursor) {
       pageInfo {
         endCursor
         hasNextPage
