@@ -71,6 +71,8 @@ class CreateFeeds extends Component {
         }
       });
 
+      await this.props.resetHasMoreFeeds();
+
       this.setState({
         open: false,
         message: '',
@@ -79,7 +81,7 @@ class CreateFeeds extends Component {
     }
   };
 
-  createTankOnClick = async (e, createFeed) => {
+  createTankOnClick = async (e, createFeed, resetHasMoreFeeds) => {
     const { files, message } = this.state;
 
     // Saving image file to cloudinary
@@ -109,6 +111,8 @@ class CreateFeeds extends Component {
       message: '',
       files: []
     });
+
+    await this.props.resetHasMoreFeeds();
   };
 
   render() {

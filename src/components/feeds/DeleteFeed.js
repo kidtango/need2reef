@@ -5,13 +5,6 @@ import SmallerSpinner from '../spinner/SmallerSpinner';
 import { Box, IconButton, Flyout, Button } from 'gestalt';
 import { DELETE_FEED_MUTATION } from '../graphql/mutations';
 import { GET_FEEDS_QUERY } from '../graphql/queries';
-import withSession from '../withSession';
-
-// const Composed = adopt({
-//   deleteFeed: ({ render }) => (
-//     <Mutation mutation={DELETE_FEED_MUTATION}>{render}</Mutation>
-//   )
-// });
 
 class DeleteFeed extends Component {
   state = {
@@ -33,6 +26,8 @@ class DeleteFeed extends Component {
         id: feedId
       }
     });
+
+    await this.props.resetHasMoreFeeds();
 
     this.setState({ open: false });
   };

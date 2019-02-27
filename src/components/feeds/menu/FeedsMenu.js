@@ -3,7 +3,7 @@ import { Box, IconButton, Sticky, Text, Avatar } from 'gestalt';
 import withSession from '../../withSession';
 import CreateFeeds from './CreateFeeds';
 
-const FeedsMenu = ({ session, refetch }) => {
+const FeedsMenu = ({ session, refetch, resetHasMoreFeeds }) => {
   return (
     <Sticky top={0} dangerouslySetZIndex={{ __zIndex: 2 }}>
       <Box
@@ -35,7 +35,11 @@ const FeedsMenu = ({ session, refetch }) => {
           justifyContent='center'
         >
           <Box paddingX={2} flex='grow'>
-            <CreateFeeds userId={session.me.id} refetch={refetch} />
+            <CreateFeeds
+              userId={session.me.id}
+              refetch={refetch}
+              resetHasMoreFeeds={resetHasMoreFeeds}
+            />
           </Box>
           <Box paddingX={2} flex='grow'>
             <IconButton accessibilityLabel='camera' icon='camera' size='lg' />

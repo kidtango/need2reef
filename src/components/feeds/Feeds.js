@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Box, Text, Avatar, Container, Mask } from 'gestalt';
+import { Box, Text, Avatar, Container, Mask, Image } from 'gestalt';
 import { GET_FEEDS_QUERY } from '../graphql/queries';
 import { GET_MORE_FEEDS_QUERY } from '../graphql/queries';
 import Spinner from '../spinner/Spinner';
@@ -13,7 +13,7 @@ import withSession from '../withSession';
 
 class Feeds extends Component {
   state = {
-    hasMoreProfile: true
+    hasMoreFeeds: true
   };
 
   getMoreItems = (e, fetchMore, feedsConnection) => {
@@ -26,7 +26,7 @@ class Feeds extends Component {
       updateQuery: (previousResult, { fetchMoreResult }) => {
         if (!fetchMoreResult.feedsConnection.pageInfo.hasNextPage) {
           this.setState({
-            hasMoreProfile: fetchMoreResult.feedsConnection.pageInfo.hasNextPage
+            hasMoreFeeds: fetchMoreResult.feedsConnection.pageInfo.hasNextPage
           });
         }
 
@@ -41,6 +41,12 @@ class Feeds extends Component {
           }
         };
       }
+    });
+  };
+
+  resetHasMoreFeeds = () => {
+    this.setState({
+      hasMoreFeeds: true
     });
   };
 
@@ -60,11 +66,11 @@ class Feeds extends Component {
           return (
             <React.Fragment>
               {/* menu */}
-              <FeedsMenu />
+              <FeedsMenu resetHasMoreFeeds={this.resetHasMoreFeeds} />
               <InfiniteScroll
                 dataLength={feedsConnection.edges.length}
                 next={e => this.getMoreItems(e, fetchMore, feedsConnection)}
-                hasMore={this.state.hasMoreProfile}
+                hasMore={this.state.hasMoreFeeds}
                 loader={
                   <Box
                     justifyContent='center'
@@ -85,13 +91,17 @@ class Feeds extends Component {
                     justifyContent='between'
                     wrap
                     padding={2}
+                    fit={true}
+                    flex='grow'
                   >
                     {feedsConnection.edges.map(feed => (
                       <Box
                         padding={1}
                         color='lightGray'
                         margin={5}
+                        marginBottom={10}
                         shape='rounded'
+                        maxWidth={700}
                       >
                         <Box
                           display='flex'
@@ -121,7 +131,11 @@ class Feeds extends Component {
                             }}
                           >
                             {/* Delete Feed */}
-                            <DeleteFeed feed={feed} session={session} />
+                            <DeleteFeed
+                              feed={feed}
+                              session={session}
+                              resetHasMoreFeeds={this.resetHasMoreFeeds}
+                            />
                           </Box>
                         </Box>
                         <Box marginLeft={4} marginBottom={2}>
@@ -136,11 +150,15 @@ class Feeds extends Component {
                           alignSelf='center'
                           shape='rounded'
                           marginBottom={2}
+                          maxWidth={700}
                         >
                           <Mask shape='rounded'>
                             {feed.node.images[0] ? (
                               <img
-                                style={{ maxWidth: '100%', display: 'block' }}
+                                style={{
+                                  maxWidth: '100%',
+                                  display: 'block'
+                                }}
                                 src={feed.node.images[0].url}
                               />
                             ) : (
