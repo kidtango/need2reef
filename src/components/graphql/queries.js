@@ -230,13 +230,70 @@ export const GET_FEED_COMMENTS_QUERY = gql`
   }
 `;
 
+// Query for more feed comments
+export const GET_MORE_FEED_COMMENTS_QUERY = gql`
+  query GET_MORE_FEED_COMMENTS_QUERY($id: ID!, $cursor: String!) {
+    feedCommentsConnection(
+      where: { feed: { id: $id } }
+      orderBy: createdAt_DESC
+      first: 4
+      after: $cursor
+    ) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      edges {
+        node {
+          author {
+            id
+            name
+          }
+          createdAt
+          id
+          body
+        }
+      }
+    }
+  }
+`;
+
 // Query replies for feed comments
 export const GET_FEED_COMMENT_REPLIES = gql`
   query GET_FEED_COMMENT_REPLIES($commentId: ID!) {
     feedCommentRepliesConnection(
       orderBy: createdAt_DESC
+      first: 2
+      where: { comment: { id: $commentId } }
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          body
+          createdAt
+          author {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Query more replies for feed comments
+export const GET_MORE_FEED_COMMENT_REPLIES = gql`
+  query GET_FEED_COMMENT_REPLIES($commentId: ID!, $cursor: String!) {
+    feedCommentRepliesConnection(
+      orderBy: createdAt_DESC
       first: 4
       where: { comment: { id: $commentId } }
+      after: $cursor
     ) {
       pageInfo {
         hasNextPage

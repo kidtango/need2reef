@@ -263,7 +263,7 @@ class Signup extends React.Component {
             );
           }}
         </Mutation>
-        <Profiles />
+        {/* <Profiles /> */}
       </React.Fragment>
     );
   }

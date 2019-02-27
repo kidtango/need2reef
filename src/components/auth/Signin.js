@@ -209,7 +209,7 @@ class Signin extends React.Component {
             );
           }}
         </Mutation>
-        <Profiles />
+        {/* <Profiles /> */}
       </React.Fragment>
     );
   }

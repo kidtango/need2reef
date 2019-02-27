@@ -30,14 +30,14 @@ class Feeds extends Component {
           });
         }
 
-        const previousProfiles = previousResult.feedsConnection.edges;
+        const previousFeeds = previousResult.feedsConnection.edges;
 
-        const newProfiles = fetchMoreResult.feedsConnection.edges;
+        const newFeeds = fetchMoreResult.feedsConnection.edges;
 
         return {
           feedsConnection: {
             __typename: previousResult.feedsConnection.__typename,
-            edges: [...previousProfiles, ...newProfiles]
+            edges: [...previousFeeds, ...newFeeds]
           }
         };
       }
