@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { adopt } from 'react-adopt';
 import { Mutation } from 'react-apollo';
 import SmallerSpinner from '../spinner/SmallerSpinner';
 import { Box, IconButton, Flyout, Button } from 'gestalt';
 import { DELETE_FEED_MUTATION } from '../graphql/mutations';
 import { GET_FEEDS_QUERY } from '../graphql/queries';
+import withSession from '../withSession';
 
 class DeleteFeed extends Component {
   state = {
@@ -33,7 +33,9 @@ class DeleteFeed extends Component {
   };
 
   render() {
-    const { feed, session } = this.props;
+    const { feed } = this.props;
+    const { session } = this.props;
+
     const ownsFeed = session.me.id === feed.node.author.id;
 
     return (

@@ -79,7 +79,11 @@ class Comments extends Component {
                       wrap
                     >
                       <Box paddingX={1}>
-                        <Avatar name={feedComment.author.name} size='sm' />
+                        <Avatar
+                          name={feedComment.author.name}
+                          size='sm'
+                          src={feedComment.author.profilePicture[0].picture}
+                        />
                       </Box>
                       <Box>
                         <Text bold size='xs' align='left'>
@@ -146,7 +150,7 @@ class Comments extends Component {
                   }
                 >
                   <Text bold color='gray' size='sm'>
-                    {this.state.hasMoreComments ? 'Load More Commments' : null}
+                    {this.state.hasMoreComments ? 'Load More Comments' : null}
                   </Text>
                 </Touchable>
               </Box>

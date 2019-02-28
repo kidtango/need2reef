@@ -6,7 +6,7 @@ import { GET_FEEDS_QUERY } from '../graphql/queries';
 import { GET_MORE_FEEDS_QUERY } from '../graphql/queries';
 import Spinner from '../spinner/Spinner';
 import CreateComments from './CreateComments';
-import FeedsMenu from './menu/FeedsMenu';
+import PersonalMenuBar from '../navbar/PersonalMenuBar';
 import DeleteFeed from './DeleteFeed';
 import Comments from './Comments';
 import withSession from '../withSession';
@@ -52,6 +52,7 @@ class Feeds extends Component {
 
   render() {
     const { session } = this.props;
+    console.log('TCL: render -> session', session);
     return (
       <Query query={GET_FEEDS_QUERY}>
         {({ data: { feedsConnection }, loading, error, fetchMore }) => {
@@ -66,7 +67,7 @@ class Feeds extends Component {
           return (
             <React.Fragment>
               {/* menu */}
-              <FeedsMenu resetHasMoreFeeds={this.resetHasMoreFeeds} />
+              <PersonalMenuBar resetHasMoreFeeds={this.resetHasMoreFeeds} />
               <InfiniteScroll
                 dataLength={feedsConnection.edges.length}
                 next={e => this.getMoreItems(e, fetchMore, feedsConnection)}
@@ -112,7 +113,11 @@ class Feeds extends Component {
                           wrap
                         >
                           <Box display='flex' paddingX={1} alignItems='center'>
-                            <Avatar name={feed.node.author.name} size='md' />
+                            <Avatar
+                              name={feed.node.author.name}
+                              size='md'
+                              src={feed.node.author.profilePicture[0].picture}
+                            />
                             <Box display='flex' paddingX={1}>
                               <Text bold size='sm' align='left'>
                                 {feed.node.author.name}
@@ -132,9 +137,9 @@ class Feeds extends Component {
                           >
                             {/* Delete Feed */}
                             <DeleteFeed
+                              resetHasMoreFeeds={this.resetHasMoreFeeds}
                               feed={feed}
                               session={session}
-                              resetHasMoreFeeds={this.resetHasMoreFeeds}
                             />
                           </Box>
                         </Box>

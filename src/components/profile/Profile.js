@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Box, IconButton, Sticky, Text, Avatar } from 'gestalt';
 import ProfileMenu from './ProfileMenu';
 import AddNewTank from './tank/AddNewTank';
+import PersonalMenuBar from '../navbar/PersonalMenuBar';
 
 class Profile extends Component {
   render() {
@@ -12,7 +13,7 @@ class Profile extends Component {
 
     return (
       <React.Fragment>
-        <Sticky top={0} dangerouslySetZIndex={{ __zIndex: 2 }}>
+        {/* <Sticky top={0} dangerouslySetZIndex={{ __zIndex: 2 }}>
           <Box
             display='flex'
             height={90}
@@ -23,8 +24,12 @@ class Profile extends Component {
             marginBottom={1}
           >
             <Box display='flex' direction='row'>
-              <Box paddingX={1}>
-                <Avatar name={me.name} size='md' src='/assets/scott.jpg' />
+              <Box paddingX={1} width={50}>
+                <Avatar
+                  name={me.name}
+                  size='md'
+                  src={me.profilePicture[0].picture}
+                />
               </Box>
               <Box paddingX={1}>
                 <Text bold>{me.name}</Text>
@@ -61,7 +66,8 @@ class Profile extends Component {
               </Box>
             </Box>
           </Box>
-        </Sticky>
+        </Sticky> */}
+        <PersonalMenuBar />
         <ProfileMenu profileId={me.profile.id} />
       </React.Fragment>
     );

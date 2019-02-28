@@ -71,15 +71,11 @@ class AuthNav extends Component {
             </NavLink>
             <NavLink to='profile'>
               <Box paddingX={2}>
-                <Card>
-                  <Touchable onTouch={this.handleClick} shape='circle'>
-                    <Avatar
-                      name={session && session.me.name}
-                      size='sm'
-                      src='/assets/scott.jpg'
-                    />
-                  </Touchable>
-                </Card>
+                <IconButton
+                  accessibilityLabel='person'
+                  icon='person'
+                  size='md'
+                />
               </Box>
             </NavLink>
             <Box paddingX={2}>

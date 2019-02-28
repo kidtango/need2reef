@@ -48,6 +48,10 @@ export const GET_CURRENT_USER = gql`
       id
       name
       email
+      profilePicture {
+        id
+        picture
+      }
       createdAt
       profile {
         id
@@ -169,6 +173,10 @@ export const GET_FEEDS_QUERY = gql`
           author {
             name
             id
+            profilePicture {
+              id
+              picture
+            }
           }
         }
       }
@@ -196,6 +204,10 @@ export const GET_MORE_FEEDS_QUERY = gql`
           author {
             name
             id
+            profilePicture {
+              id
+              picture
+            }
           }
         }
       }
@@ -220,6 +232,10 @@ export const GET_FEED_COMMENTS_QUERY = gql`
           author {
             id
             name
+            profilePicture {
+              id
+              picture
+            }
           }
           createdAt
           id
@@ -248,6 +264,10 @@ export const GET_MORE_FEED_COMMENTS_QUERY = gql`
           author {
             id
             name
+            profilePicture {
+              id
+              picture
+            }
           }
           createdAt
           id
@@ -279,6 +299,10 @@ export const GET_FEED_COMMENT_REPLIES = gql`
           author {
             id
             name
+            profilePicture {
+              id
+              picture
+            }
           }
         }
       }
@@ -308,6 +332,10 @@ export const GET_MORE_FEED_COMMENT_REPLIES = gql`
           author {
             id
             name
+            profilePicture {
+              id
+              picture
+            }
           }
         }
       }

@@ -163,3 +163,18 @@ export const UPDATE_FEED_COMMENT_REPLY_MUTATION = gql`
     }
   }
 `;
+
+// Add & Update user's profile picture
+export const UPDATE_PROFILE_PICTURE_MUTATION = gql`
+  mutation UPDATE_PROFILE_PICTURE_MUTATION(
+    $profilePictureId: ID!
+    $picture: String!
+  ) {
+    updateProfilePicture(
+      data: { picture: $picture }
+      where: { id: $profilePictureId }
+    ) {
+      id
+    }
+  }
+`;

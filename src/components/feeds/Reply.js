@@ -79,7 +79,11 @@ class Reply extends Component {
                     position='relative'
                     wrap
                   >
-                    <Avatar name={reply.node.author.name} size='sm' />
+                    <Avatar
+                      name={reply.node.author.name}
+                      size='sm'
+                      src={reply.node.author.profilePicture[0].picture}
+                    />
                     <Box paddingX={1}>
                       <Text bold size='xs'>
                         {reply.node.author.name}
