@@ -84,17 +84,12 @@ class Profiles extends Component {
                 </Box>
               }
             >
-              <Box
-                padding={6}
-                alignContent='center'
-                justifyContent='center'
-                paddingX={10}
-              >
+              <Box paddingX={7} alignContent='center' justifyContent='center'>
                 <Masonry
                   flexible
                   minCols={1}
-                  columnWidth={200}
-                  gutterWidth={10}
+                  columnWidth={450}
+                  gutterWidth={1}
                   items={tanksConnection.edges}
                   comp={({ data }) => {
                     return (
@@ -103,16 +98,16 @@ class Profiles extends Component {
                         display='flex'
                         key={data.node.id}
                         wrap
-                        width={210}
-                        padding={1}
+                        width={430}
+                        margin={5}
                       >
                         <Touchable>
                           <Card>
                             <Collage
                               columns={3}
                               cover
-                              width={200}
-                              height={200}
+                              width={420}
+                              height={420}
                               gutter={1}
                               renderImage={({ index, width, height }) => {
                                 const coverImage = {

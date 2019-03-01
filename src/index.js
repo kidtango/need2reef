@@ -16,6 +16,7 @@ import withSession from './components/withSession';
 import Signup from './components/auth/Signup';
 import PleaseSignin from './components/auth/PleaseSignin';
 import PersonalProfile from './components/profile/PersonalProfile';
+import Profiles from './components/home/Profiles';
 
 // using Apollo client to send auth header to backend
 const client = new ApolloClient({
@@ -55,6 +56,7 @@ const Root = ({ session }) => (
           path='/my_profile'
         />
         <Route component={Profile} path='/profile/:profileId' />
+        <Route component={Profiles} path='/profiles' />
       </Switch>
     </Provider>
   </Router>
