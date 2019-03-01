@@ -10,17 +10,15 @@ import {
   Box,
   Text,
   Heading,
-  Image,
   Container,
   TextField,
   Button,
   Modal,
-  Layer,
-  Link,
-  Touchable
+  Layer
 } from 'gestalt';
 import { setToken } from '../../utils';
 import Profiles from '../home/Profiles';
+import Feeds from '../feeds/Feeds';
 
 const CREATEUSER_MUTATION = gql`
   mutation createUser($email: String!, $name: String!, $password: String!) {
@@ -39,6 +37,7 @@ class Signup extends React.Component {
   state = {
     showModal: true,
     password: '',
+    confirmPassword: '',
     email: '',
     toast: false,
     toastMessage: '',
@@ -59,7 +58,14 @@ class Signup extends React.Component {
   createUser = async (e, signupUser, client) => {
     e.preventDefault();
 
-    const { email, password, name, showModal } = this.state;
+    const { email, password, name, showModal, confirmPassword } = this.state;
+    const ArepasswordsMatch = password === confirmPassword;
+    console.log('TCL: createUser -> ArepasswordsMatch', ArepasswordsMatch);
+
+    if (!ArepasswordsMatch) {
+      this.showToast('Passwords do not match. Please try again');
+      return;
+    }
 
     if (this.isFormEmpty(this.state)) {
       this.showToast('Please fill in all fields');
@@ -80,7 +86,7 @@ class Signup extends React.Component {
       this.props.history.push(location.pathname);
       client.resetStore();
     } catch (error) {
-      this.showToast('Uh ohh...Something went wrong');
+      this.showToast(error.message);
       console.log(error);
     }
   };
@@ -103,7 +109,8 @@ class Signup extends React.Component {
       toastMessage,
       name,
       password,
-      email
+      email,
+      confirmPassword
     } = this.state;
 
     return (
@@ -127,14 +134,14 @@ class Signup extends React.Component {
                                 align='center'
                                 justifyContent='center'
                               >
-                                <Box height={50} width={50} margin={2}>
+                                {/* <Box height={50} width={50} margin={2}>
                                   <Image
                                     src='./icons/logo.png'
                                     alt='TheCoralStore'
                                     naturalHeight={1}
                                     naturalWidth={1}
                                   />
-                                </Box>
+                                </Box> */}
                               </Box>
                               <Box alignItems='center' paddingX={10}>
                                 <Heading size='xs'>
@@ -213,17 +220,34 @@ class Signup extends React.Component {
                                   <TextField
                                     id='password'
                                     name='password'
-                                    placeholder='Create a password'
+                                    errorMessage={
+                                      this.state.password.length < 8
+                                        ? 'Password must have at least 8 characters'
+                                        : null
+                                    }
+                                    idealErrorDirection='down'
+                                    placeholder='Password'
                                     value={password}
                                     type='password'
                                     onChange={this.handleChange}
                                   />
+                                </Box>
+                                <Box padding={1}>
+                                  <TextField
+                                    id='confirmPassword'
+                                    name='confirmPassword'
+                                    placeholder='Confirm password'
+                                    value={confirmPassword}
+                                    type='password'
+                                    onChange={this.handleChange}
+                                  />
+
                                   <Box padding={2} />
 
                                   <Button
-                                    color='red'
+                                    color='blue'
                                     size='md'
-                                    disable={loading}
+                                    disabled={loading}
                                     text='Continue'
                                     type='submit'
                                     onSubmit={this.handleToggleModal}
@@ -263,7 +287,7 @@ class Signup extends React.Component {
             );
           }}
         </Mutation>
-        {/* <Profiles /> */}
+        <Profiles />
       </React.Fragment>
     );
   }

@@ -20,6 +20,7 @@ import {
 import { setToken } from '../../utils';
 import Profiles from '../home/Profiles';
 import Signup from './Signup';
+import Feeds from '../feeds/Feeds';
 
 const LOGINUSER_MUTATION = gql`
   mutation login($email: String!, $password: String!) {
@@ -71,7 +72,9 @@ class Signin extends React.Component {
       this.props.history.push(location.pathname);
       client.resetStore();
     } catch (error) {
-      this.showToast('Uh oh... Something went wrong');
+      this.showToast(
+        'You typed in an incorrect username or password. Please try again'
+      );
     }
   };
 
@@ -109,14 +112,14 @@ class Signin extends React.Component {
                                 align='center'
                                 justifyContent='center'
                               >
-                                <Box height={50} width={50} margin={2}>
+                                {/* <Box height={50} width={50} margin={2}>
                                   <Image
                                     src='./icons/logo.png'
                                     alt='tweef.io'
                                     naturalHeight={1}
                                     naturalWidth={1}
                                   />
-                                </Box>
+                                </Box> */}
                               </Box>
                               <Box paddingX={10} align='center'>
                                 <Heading size='sm' overflow='breakWord'>
@@ -181,7 +184,7 @@ class Signin extends React.Component {
                                   <TextField
                                     id='password '
                                     name='password'
-                                    placeholder='Create a password'
+                                    placeholder='Password'
                                     value={password}
                                     type='password'
                                     onChange={this.handleChange}
@@ -189,7 +192,7 @@ class Signin extends React.Component {
                                   <Box padding={2} />
 
                                   <Button
-                                    color='red'
+                                    color='blue'
                                     size='md'
                                     disable={loading}
                                     text='Continue'
@@ -209,7 +212,7 @@ class Signin extends React.Component {
             );
           }}
         </Mutation>
-        {/* <Profiles /> */}
+        <Profiles />
       </React.Fragment>
     );
   }

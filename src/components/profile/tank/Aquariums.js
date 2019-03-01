@@ -5,9 +5,11 @@ import TankMenu from './TankMenu';
 import RemoveTank from './RemoveTank';
 import AddImages from './AddImages';
 
-const Aquariums = ({ profile }) => {
+const Aquariums = ({ profile, session }) => {
   const tanks = profile.tanks;
   const profileId = profile.id;
+
+  const ownsProfile = profileId === session.me.profile.id;
 
   return tanks.map(tank => {
     return (
@@ -34,22 +36,26 @@ const Aquariums = ({ profile }) => {
               >
                 <Heading size='xs'>{tank.title}</Heading>
               </Box>
-              <Box
-                direction='row'
-                justifyContent='end'
-                marginLeft={10}
-                flex='shrink'
-                dangerouslySetInlineStyle={{
-                  __style: {
-                    zIndex: 1
-                  }
-                }}
-              >
-                <AddImages profileId={profileId} tankId={tank.id} />
-              </Box>
-              <Box direction='row' justifyContent='end' flex='shrink'>
-                <RemoveTank profileId={profileId} tankId={tank.id} />
-              </Box>
+              {ownsProfile ? (
+                <React.Fragment>
+                  <Box
+                    direction='row'
+                    justifyContent='end'
+                    marginLeft={10}
+                    flex='shrink'
+                    dangerouslySetInlineStyle={{
+                      __style: {
+                        zIndex: 1
+                      }
+                    }}
+                  >
+                    <AddImages profileId={profileId} tankId={tank.id} />
+                  </Box>
+                  <Box direction='row' justifyContent='end' flex='shrink'>
+                    <RemoveTank profileId={profileId} tankId={tank.id} />
+                  </Box>
+                </React.Fragment>
+              ) : null}
             </Box>
             <Card>
               <Collage
@@ -110,7 +116,7 @@ const Aquariums = ({ profile }) => {
           justifyContent='center'
           padding={10}
         >
-          <TankMenu tank={tank} />
+          <TankMenu tank={tank} session={session}/>
         </Box>
       </Box>
     );

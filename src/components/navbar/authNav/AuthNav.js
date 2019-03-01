@@ -4,12 +4,8 @@ import {
   Divider,
   SearchField,
   Heading,
-  Image,
   IconButton,
-  Sticky,
-  Avatar,
-  Card,
-  Touchable
+  Sticky
 } from 'gestalt';
 import { NavLink } from 'react-router-dom';
 import AuthNavMenu from './AuthNavMenu';
@@ -19,7 +15,6 @@ class AuthNav extends Component {
   //   // console.log('click');
   // };
   render() {
-    const { session } = this.props;
     return (
       <Sticky top={0}>
         <Box
@@ -69,7 +64,7 @@ class AuthNav extends Component {
                 />
               </Box>
             </NavLink>
-            <NavLink to='profile'>
+            <NavLink to='/my_profile'>
               <Box paddingX={2}>
                 <IconButton
                   accessibilityLabel='person'

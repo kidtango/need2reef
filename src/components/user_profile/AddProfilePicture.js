@@ -97,7 +97,7 @@ class AddProfilePicture extends Component {
                   }}
                 >
                   <Box paddingX={1}>
-                    <Touchable shape='circle' onTouch={this.handleClick}>
+                    <Touchable shape='pill' onTouch={this.handleClick}>
                       <Avatar
                         name={session.me.name}
                         size='md'

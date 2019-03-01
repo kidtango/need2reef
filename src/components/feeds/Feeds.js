@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Box, Text, Avatar, Container, Mask, Image } from 'gestalt';
+import { Box, Text, Avatar, Container, Mask, Touchable } from 'gestalt';
 import { GET_FEEDS_QUERY } from '../graphql/queries';
 import { GET_MORE_FEEDS_QUERY } from '../graphql/queries';
 import Spinner from '../spinner/Spinner';
@@ -10,6 +10,7 @@ import PersonalMenuBar from '../navbar/PersonalMenuBar';
 import DeleteFeed from './DeleteFeed';
 import Comments from './Comments';
 import withSession from '../withSession';
+import AvatarMedium from '../avatars/AvatarMedium';
 
 class Feeds extends Component {
   state = {
@@ -52,7 +53,6 @@ class Feeds extends Component {
 
   render() {
     const { session } = this.props;
-    console.log('TCL: render -> session', session);
     return (
       <Query query={GET_FEEDS_QUERY}>
         {({ data: { feedsConnection }, loading, error, fetchMore }) => {
@@ -97,7 +97,7 @@ class Feeds extends Component {
                   >
                     {feedsConnection.edges.map(feed => (
                       <Box
-                        padding={1}
+                        padding={3}
                         color='lightGray'
                         margin={5}
                         marginBottom={10}
@@ -112,18 +112,11 @@ class Feeds extends Component {
                           direction='row'
                           wrap
                         >
-                          <Box display='flex' paddingX={1} alignItems='center'>
-                            <Avatar
-                              name={feed.node.author.name}
-                              size='md'
-                              src={feed.node.author.profilePicture[0].picture}
-                            />
-                            <Box display='flex' paddingX={1}>
-                              <Text bold size='sm' align='left'>
-                                {feed.node.author.name}
-                              </Text>
-                            </Box>
-                          </Box>
+                          <AvatarMedium
+                            name={feed.node.author.name}
+                            picture={feed.node.author.profilePicture[0].picture}
+                            profileId={feed.node.author.profile.id}
+                          />
 
                           <Box
                             direction='row'

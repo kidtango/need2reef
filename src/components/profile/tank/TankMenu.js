@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { Tabs, Box } from 'gestalt';
 import Comments from './Comments';
 
@@ -14,7 +14,7 @@ class TankMenu extends React.Component {
     });
   };
   render() {
-    const { tank } = this.props;
+    const { tank, session } = this.props;
     if (!tank) return <p>Error</p>;
     return (
       <Box
@@ -46,7 +46,9 @@ class TankMenu extends React.Component {
           />
         </Box>
         <Box padding={2}>
-          {this.state.activeIndex === 0 && <Comments tankId={tank.id} />}
+          {this.state.activeIndex === 0 && (
+            <Comments tankId={tank.id} session={session} />
+          )}
         </Box>
       </Box>
     );

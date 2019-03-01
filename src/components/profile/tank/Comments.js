@@ -23,6 +23,7 @@ import DeleteComments from './DeleteComments';
 import DeleteReply from './DeleteReply';
 import EditComment from './EditComment';
 import EditReply from './EditReply';
+import AvatarMedium from '../../avatars/AvatarMedium';
 
 class Comments extends Component {
   state = {
@@ -101,7 +102,7 @@ class Comments extends Component {
     }
   };
   render() {
-    const { tankId } = this.props;
+    const { tankId, session } = this.props;
 
     return (
       <Query query={GET_COMMENTS_QUERY} variables={{ id: tankId }}>
@@ -113,6 +114,7 @@ class Comments extends Component {
                 <Spinner />
               </Box>
             );
+
           let hasMoreComments = data.tankPostsConnection.pageInfo.hasNextPage;
 
           return (
@@ -132,155 +134,163 @@ class Comments extends Component {
                       padding={2}
                       color='lightGray'
                     >
-                      {data.tankPostsConnection.edges.map(post => (
-                        <Box padding={1}>
-                          <Box maxWidth={450}>
-                            <Box
-                              display='flex'
-                              justifyContent='start'
-                              alignItems='center'
-                              position='relative'
-                              width={450}
-                              wrap
-                            >
-                              <Box paddingX={1} paddingY={2}>
-                                <Avatar
-                                  name={post.node.author.name}
-                                  size='sm'
-                                />
-                              </Box>
-                              <Box paddingX={1}>
-                                <Text bold size='xs' align='left'>
-                                  {post.node.author.name}
-                                </Text>
-                              </Box>
-                              <Box paddingX={2} center>
-                                <DeleteComments
-                                  postId={post.node.id}
-                                  refetch={refetch}
-                                />
-                              </Box>
-                            </Box>
-                            <Box paddingX={3}>
-                              <Text
-                                align='left'
-                                color='green'
-                                key={post.node.id}
-                                size='sm'
-                                bold
-                              >
-                                {post.node.body}
-                              </Text>
-
+                      {data.tankPostsConnection.edges.map(post => {
+                        const ownsPost = session.me.id === post.node.author.id;
+                        return (
+                          <Box padding={1}>
+                            <Box maxWidth={450}>
                               <Box
-                                direction='row'
-                                alignItems='center'
                                 display='flex'
-                                paddingY={1}
+                                justifyContent='start'
+                                alignItems='center'
+                                position='relative'
+                                width={450}
+                                wrap
                               >
-                                <Box paddingX={1}>
-                                  <Text color='gray' italic size='xs'>
-                                    {format(
-                                      post.node.createdAt,
-                                      'MMM d, YYYY',
-                                      {
-                                        awareOfUnicodeTokens: true
-                                      }
-                                    )}
-                                  </Text>
-                                </Box>
-                                <Box>
-                                  <Reply
+                                <AvatarMedium
+                                  name={post.node.author.name}
+                                  picture={
+                                    post.node.author.profilePicture[0].picture
+                                  }
+                                  profileId={post.node.author.profile.id}
+                                />
+                                <Box paddingX={2} center>
+                                  <DeleteComments
                                     postId={post.node.id}
                                     refetch={refetch}
+                                    ownsPost={ownsPost}
                                   />
                                 </Box>
-                                <Box>
-                                  {true && (
-                                    <EditComment
-                                      refetch={refetch}
-                                      comment={post.node.body}
-                                      postId={post.node.id}
-                                    />
-                                  )}
-                                </Box>
-                                <Box>
-                                  <IconButton icon='heart' size='xs' />
-                                </Box>
                               </Box>
-                            </Box>
-                            {post.node.replies.map(reply => (
-                              <Box paddingX={6}>
+                              <Box paddingX={3} paddingY={1}>
+                                <Text
+                                  align='left'
+                                  color='green'
+                                  key={post.node.id}
+                                  size='sm'
+                                  bold
+                                >
+                                  {post.node.body}
+                                </Text>
+
                                 <Box
-                                  display='flex'
                                   direction='row'
                                   alignItems='center'
-                                  position='relative'
-                                  wrap
+                                  display='flex'
+                                  paddingY={1}
                                 >
-                                  <Avatar name={reply.author.name} size='sm' />
                                   <Box paddingX={1}>
-                                    <Text bold size='xs' key={reply.id}>
-                                      {reply.author.name}
+                                    <Text color='gray' italic size='xs'>
+                                      {format(
+                                        post.node.createdAt,
+                                        'MMM d, YYYY',
+                                        {
+                                          awareOfUnicodeTokens: true
+                                        }
+                                      )}
                                     </Text>
                                   </Box>
-                                  <Box paddingX={2}>
-                                    {true && (
-                                      <DeleteReply
-                                        replyId={reply.id}
+                                  <Box>
+                                    <Reply
+                                      postId={post.node.id}
+                                      refetch={refetch}
+                                    />
+                                  </Box>
+                                  <Box>
+                                    {ownsPost && (
+                                      <EditComment
                                         refetch={refetch}
+                                        comment={post.node.body}
+                                        postId={post.node.id}
                                       />
                                     )}
                                   </Box>
-                                </Box>
-                                <Box paddingX={2} paddingY={2}>
-                                  <Text
-                                    color='orange'
-                                    key={reply.id}
-                                    size='sm'
-                                    bold
-                                  >
-                                    {reply.body}
-                                  </Text>
-                                  <Box
-                                    direction='row'
-                                    alignItems='center'
-                                    display='flex'
-                                  >
-                                    <Box>
-                                      <Text color='gray' italic size='xs'>
-                                        {format(
-                                          post.node.createdAt,
-                                          'MMM d, YYYY',
-                                          {
-                                            awareOfUnicodeTokens: true
-                                          }
-                                        )}
-                                      </Text>
-                                    </Box>
-                                    <Box>
-                                      <Reply
-                                        postId={post.node.id}
-                                        refetch={refetch}
-                                      />
-                                    </Box>
-                                    <Box>
-                                      <EditReply
-                                        replyId={reply.id}
-                                        refetch={refetch}
-                                        reply={reply.body}
-                                      />
-                                    </Box>
-                                    <Box paddingX={1}>
-                                      <IconButton icon='heart' size='xs' />
-                                    </Box>
+                                  <Box>
+                                    <IconButton icon='heart' size='xs' />
                                   </Box>
                                 </Box>
                               </Box>
-                            ))}
+                              {post.node.replies.map(reply => {
+                                const ownsReply =
+                                  session.me.id === reply.author.id;
+                                return (
+                                  <Box paddingX={6}>
+                                    <Box
+                                      display='flex'
+                                      direction='row'
+                                      alignItems='center'
+                                      position='relative'
+                                      wrap
+                                    >
+                                      <AvatarMedium
+                                        picture={
+                                          reply.author.profilePicture[0].picture
+                                        }
+                                        name={reply.author.name}
+                                        profileId={reply.author.profile.id}
+                                      />
+
+                                      <Box paddingX={2}>
+                                        {ownsReply && (
+                                          <DeleteReply
+                                            replyId={reply.id}
+                                            refetch={refetch}
+                                            ownsReply={ownsReply}
+                                          />
+                                        )}
+                                      </Box>
+                                    </Box>
+                                    <Box paddingX={3} paddingY={1}>
+                                      <Text
+                                        color='orange'
+                                        key={reply.id}
+                                        size='sm'
+                                        bold
+                                      >
+                                        {reply.body}
+                                      </Text>
+                                      <Box
+                                        direction='row'
+                                        alignItems='center'
+                                        display='flex'
+                                      >
+                                        <Box>
+                                          <Text color='gray' italic size='xs'>
+                                            {format(
+                                              post.node.createdAt,
+                                              'MMM d, YYYY',
+                                              {
+                                                awareOfUnicodeTokens: true
+                                              }
+                                            )}
+                                          </Text>
+                                        </Box>
+                                        <Box>
+                                          <Reply
+                                            postId={post.node.id}
+                                            refetch={refetch}
+                                          />
+                                        </Box>
+                                        <Box>
+                                          <EditReply
+                                            replyId={reply.id}
+                                            refetch={refetch}
+                                            reply={reply.body}
+                                            ownsReply={ownsReply}
+                                          />
+                                        </Box>
+                                        <Box paddingX={1}>
+                                          <IconButton icon='heart' size='xs' />
+                                        </Box>
+                                      </Box>
+                                    </Box>
+                                  </Box>
+                                );
+                              })}
+                            </Box>
                           </Box>
-                        </Box>
-                      ))}
+                        );
+                      })}
 
                       {/* Toggle text area for creating new posts */}
 

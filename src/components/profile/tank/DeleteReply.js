@@ -86,6 +86,7 @@ class DeleteReply extends Component {
                       color='white'
                       text='Delete'
                       size='sm'
+                      disabled={this.props.ownsReply}
                       onClick={e => this.onHandleClick(e, deleteTankReply)}
                     />
                   </Box>

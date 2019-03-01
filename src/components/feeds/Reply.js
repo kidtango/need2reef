@@ -8,6 +8,7 @@ import SmallerSpinner from '../spinner/SmallerSpinner';
 import CreateReply from './CreateReply';
 import DeleteCommentReply from './DeleteCommentReply';
 import EditCommentReply from './EditCommentReply';
+import AvatarMedium from '../avatars/AvatarMedium';
 
 class Reply extends Component {
   state = {
@@ -79,16 +80,21 @@ class Reply extends Component {
                     position='relative'
                     wrap
                   >
-                    <Avatar
+                    {/* <Avatar
                       name={reply.node.author.name}
-                      size='sm'
+                      size='md'
                       src={reply.node.author.profilePicture[0].picture}
                     />
                     <Box paddingX={1}>
-                      <Text bold size='xs'>
+                      <Text bold size='sm'>
                         {reply.node.author.name}
                       </Text>
-                    </Box>
+                    </Box> */}
+                    <AvatarMedium
+                      name={reply.node.author.name}
+                      picture={reply.node.author.profilePicture[0].picture}
+                      profileId={reply.node.author.profile.id}
+                    />
                     <Box paddingX={2}>
                       <DeleteCommentReply
                         reply={reply.node}
@@ -96,7 +102,7 @@ class Reply extends Component {
                       />
                     </Box>
                   </Box>
-                  <Box paddingX={2} paddingY={2}>
+                  <Box paddingX={3} paddingY={1}>
                     <Text color='orange' size='sm' bold>
                       {reply.node.body}
                     </Text>

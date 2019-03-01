@@ -46,6 +46,12 @@ class DeleteComments extends Component {
     return (
       <Composed>
         {({ deleteTankPost, loading, error }) => {
+          if (error)
+            return (
+              <p>
+                uhh...ohh...Something went wrong! It worked on my computer... :(
+              </p>
+            );
           if (loading)
             return (
               <Box alignContent='center'>
@@ -93,6 +99,7 @@ class DeleteComments extends Component {
                         text='Delete'
                         size='sm'
                         onClick={e => this.onHandleClick(e, deleteTankPost)}
+                        disabled={!this.props.ownsPost}
                       />
                     </Box>
                   </Flyout>

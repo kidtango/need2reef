@@ -65,6 +65,10 @@ export const GET_CURRENT_USER_PROFILE = gql`
   query GET_CURRENT_USER_PROFILE($id: ID!) {
     profile(id: $id) {
       id
+      author {
+        id
+        name
+      }
       tanks {
         id
         title
@@ -97,6 +101,17 @@ export const GET_COMMENTS_QUERY = gql`
           id
           body
           createdAt
+          author {
+            id
+            name
+            profile {
+              id
+            }
+            profilePicture {
+              id
+              picture
+            }
+          }
           replies(orderBy: createdAt_DESC) {
             id
             body
@@ -104,11 +119,15 @@ export const GET_COMMENTS_QUERY = gql`
             author {
               id
               name
+              profile {
+                id
+              }
+
+              profilePicture {
+                id
+                picture
+              }
             }
-          }
-          author {
-            id
-            name
           }
         }
       }
@@ -134,6 +153,17 @@ export const GET_MORE_COMMENTS_QUERY = gql`
           id
           body
           createdAt
+          author {
+            id
+            name
+            profile {
+              id
+            }
+            profilePicture {
+              id
+              picture
+            }
+          }
           replies(orderBy: createdAt_DESC) {
             id
             body
@@ -141,11 +171,15 @@ export const GET_MORE_COMMENTS_QUERY = gql`
             author {
               id
               name
+              profile {
+                id
+              }
+              p
+              profilePicture {
+                id
+                picture
+              }
             }
-          }
-          author {
-            id
-            name
           }
         }
       }
@@ -173,6 +207,9 @@ export const GET_FEEDS_QUERY = gql`
           author {
             name
             id
+            profile {
+              id
+            }
             profilePicture {
               id
               picture
@@ -204,6 +241,9 @@ export const GET_MORE_FEEDS_QUERY = gql`
           author {
             name
             id
+            profile {
+              id
+            }
             profilePicture {
               id
               picture
@@ -232,6 +272,9 @@ export const GET_FEED_COMMENTS_QUERY = gql`
           author {
             id
             name
+            profile {
+              id
+            }
             profilePicture {
               id
               picture
@@ -264,6 +307,9 @@ export const GET_MORE_FEED_COMMENTS_QUERY = gql`
           author {
             id
             name
+            profile {
+              id
+            }
             profilePicture {
               id
               picture
@@ -299,6 +345,9 @@ export const GET_FEED_COMMENT_REPLIES = gql`
           author {
             id
             name
+            profile {
+              id
+            }
             profilePicture {
               id
               picture
@@ -332,6 +381,9 @@ export const GET_MORE_FEED_COMMENT_REPLIES = gql`
           author {
             id
             name
+            profile {
+              id
+            }
             profilePicture {
               id
               picture

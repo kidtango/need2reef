@@ -60,13 +60,15 @@ class EditReply extends Component {
                   this.anchor = c;
                 }}
               >
-                <IconButton
-                  accessibilityExpanded={!!this.state.open}
-                  accessibilityHaspopup
-                  onClick={this.handleClick}
-                  icon='edit'
-                  size='xs'
-                />
+                {this.props.ownsReply ? (
+                  <IconButton
+                    accessibilityExpanded={!!this.state.open}
+                    accessibilityHaspopup
+                    onClick={this.handleClick}
+                    icon='edit'
+                    size='xs'
+                  />
+                ) : null}
               </div>
 
               {this.state.open && (

@@ -15,6 +15,7 @@ import { getToken } from './utils';
 import withSession from './components/withSession';
 import Signup from './components/auth/Signup';
 import PleaseSignin from './components/auth/PleaseSignin';
+import PersonalProfile from './components/profile/PersonalProfile';
 
 // using Apollo client to send auth header to backend
 const client = new ApolloClient({
@@ -38,21 +39,22 @@ const client = new ApolloClient({
   }
 });
 
-const Root = ({ refetch, session }) => (
+const Root = ({ session }) => (
   <Router>
     <Provider>
       <Navbar session={session} />
       <Switch>
         <Route render={() => <Home session={session} />} exact path='/' />
+        <Route component={Signup} path='/signup' />
         <Route
           render={() => (
             <PleaseSignin>
-              <Profile session={session} />
+              <PersonalProfile session={session} />
             </PleaseSignin>
           )}
-          path='/profile'
+          path='/my_profile'
         />
-        <Route component={Signup} path='/signup' />
+        <Route component={Profile} path='/profile/:profileId' />
       </Switch>
     </Provider>
   </Router>

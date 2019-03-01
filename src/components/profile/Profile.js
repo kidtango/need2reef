@@ -6,10 +6,8 @@ import PersonalMenuBar from '../navbar/PersonalMenuBar';
 
 class Profile extends Component {
   render() {
-    const { session } = this.props;
-    if (!session) return <p>Please create a profile</p>;
-
-    const { me } = session;
+    const { profileId } = this.props.match.params;
+    if (!profileId) return <p>Please create a profile</p>;
 
     return (
       <React.Fragment>
@@ -68,7 +66,7 @@ class Profile extends Component {
           </Box>
         </Sticky> */}
         <PersonalMenuBar />
-        <ProfileMenu profileId={me.profile.id} />
+        <ProfileMenu profileId={profileId} />
       </React.Fragment>
     );
   }

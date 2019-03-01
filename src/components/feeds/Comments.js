@@ -10,6 +10,7 @@ import Reply from './Reply';
 import CreateReply from './CreateReply';
 import EditComment from './EditComment';
 import withSession from '../withSession';
+import AvatarMedium from '../avatars/AvatarMedium';
 
 class Comments extends Component {
   state = {
@@ -78,18 +79,23 @@ class Comments extends Component {
                       width={450}
                       wrap
                     >
-                      <Box paddingX={1}>
+                      {/* <Box paddingX={1}>
                         <Avatar
                           name={feedComment.author.name}
-                          size='sm'
+                          size='md'
                           src={feedComment.author.profilePicture[0].picture}
                         />
                       </Box>
                       <Box>
-                        <Text bold size='xs' align='left'>
+                        <Text bold size='sm' align='left'>
                           {feedComment.author.name}
                         </Text>
-                      </Box>
+                      </Box> */}
+                      <AvatarMedium
+                        name={feedComment.author.name}
+                        picture={feedComment.author.profilePicture[0].picture}
+                        profileId={feedComment.author.profile.id}
+                      />
                       <Box paddingX={2} center>
                         <DeleteComment
                           refetch={refetch}

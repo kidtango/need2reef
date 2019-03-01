@@ -26,14 +26,14 @@ const UnAuthNav = ({ session }) => (
       {/* Title and Logo */}
       <NavLink to='/'>
         <Box display='flex' alignItems='center'>
-          <Box height={50} width={50} margin={1}>
+          {/* <Box height={50} width={50} margin={1}>
             <Image
               src='./icons/logo.png'
               alt='TheCoralStore'
               naturalHeight={1}
               naturalWidth={1}
             />
-          </Box>{' '}
+          </Box>{' '} */}
           <Heading size='xs' color='blue'>
             Tweef.io
           </Heading>
