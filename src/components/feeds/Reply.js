@@ -109,11 +109,11 @@ class Reply extends Component {
 
                     <Box direction='row' alignItems='center' display='flex'>
                       <Box>
-                        <Text color='gray' italic size='xs'>
+                        {/* <Text color='gray' italic size='xs'>
                           {format(reply.node.createdAt, 'MMM d, YYYY', {
                             awareOfUnicodeTokens: true
                           })}
-                        </Text>
+                        </Text> */}
                       </Box>
                       <Box>
                         <CreateReply commentId={feedComment.id} />

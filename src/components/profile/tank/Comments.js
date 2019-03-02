@@ -180,7 +180,7 @@ class Comments extends Component {
                                   paddingY={1}
                                 >
                                   <Box paddingX={1}>
-                                    <Text color='gray' italic size='xs'>
+                                    {/* <Text color='gray' italic size='xs'>
                                       {format(
                                         post.node.createdAt,
                                         'MMM d, YYYY',
@@ -188,7 +188,7 @@ class Comments extends Component {
                                           awareOfUnicodeTokens: true
                                         }
                                       )}
-                                    </Text>
+                                    </Text> */}
                                   </Box>
                                   <Box>
                                     <Reply
@@ -255,7 +255,7 @@ class Comments extends Component {
                                         display='flex'
                                       >
                                         <Box>
-                                          <Text color='gray' italic size='xs'>
+                                          {/* <Text color='gray' italic size='xs'>
                                             {format(
                                               post.node.createdAt,
                                               'MMM d, YYYY',
@@ -263,7 +263,7 @@ class Comments extends Component {
                                                 awareOfUnicodeTokens: true
                                               }
                                             )}
-                                          </Text>
+                                          </Text> */}
                                         </Box>
                                         <Box>
                                           <Reply

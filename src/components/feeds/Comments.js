@@ -117,11 +117,11 @@ class Comments extends Component {
                         paddingY={1}
                       >
                         <Box paddingX={1}>
-                          <Text color='gray' italic size='xs'>
+                          {/* <Text color='gray' italic size='xs'>
                             {format(feedComment.createdAt, 'MMM d, YYYY', {
                               awareOfUnicodeTokens: true
                             })}
-                          </Text>
+                          </Text> */}
                         </Box>
                         <Box>
                           <CreateReply
