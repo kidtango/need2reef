@@ -19,8 +19,9 @@ import PersonalProfile from './components/profile/PersonalProfile';
 import Profiles from './components/home/Profiles';
 
 // using Apollo client to send auth header to backend
+// process.env.NODE_ENV === 'development' ? endpoint : endpoint
 const client = new ApolloClient({
-  uri: process.env.NODE_ENV === 'development' ? endpoint : endpoint,
+  uri: 'https://tweef-node-server.herokuapp.com/',
   fetchOptions: {
     credentials: 'include'
   },

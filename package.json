@@ -23,13 +23,16 @@
     "react-scripts": "2.1.2",
     "react-spinners": "^0.4.7",
     "react-transition-group": "^2.5.1",
-    "react-virtualized": "^9.21.0"
+    "react-virtualized": "^9.21.0",
+    "serve": "^10.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
